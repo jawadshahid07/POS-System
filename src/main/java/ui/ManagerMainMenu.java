@@ -20,8 +20,7 @@ public class ManagerMainMenu extends JFrame {
         JLabel dashboardLabel = new JLabel("Dashboard", SwingConstants.CENTER);
         dashboardLabel.setFont(new Font("Arial", Font.BOLD, 18));
         panel.add(dashboardLabel, BorderLayout.NORTH);
-
-        // Create a panel for the buttons in the center with a small gap
+        
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 0, 10));
         // 0, 10 are the horizontal and vertical gaps
 
