@@ -1,4 +1,4 @@
-package ui;
+package ui.manager.catalog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

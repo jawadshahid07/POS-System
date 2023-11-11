@@ -1,50 +1,50 @@
-package ui;
+package ui.manager.catalog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EditProductUI extends JDialog {
+public class AddProductUI extends JDialog {
 
     private JTextField nameField;
     private JTextField priceField;
     private JTextField quantityField;
 
-    public EditProductUI(JFrame parent, Object[] productDetails) {
-        super(parent, "Edit Product", true);
+    public AddProductUI(JFrame parent) {
+        super(parent, "Add Product", true);
         setSize(300, 200);
         setLocationRelativeTo(parent);
 
         JPanel panel = new JPanel(new GridLayout(4, 2));
 
         panel.add(new JLabel("Name:"));
-        nameField = new JTextField(productDetails[1].toString());
+        nameField = new JTextField();
         panel.add(nameField);
 
         panel.add(new JLabel("Price:"));
-        priceField = new JTextField(productDetails[2].toString());
+        priceField = new JTextField();
         panel.add(priceField);
 
         panel.add(new JLabel("Quantity:"));
-        quantityField = new JTextField(productDetails[3].toString());
+        quantityField = new JTextField();
         panel.add(quantityField);
 
-        JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(new ActionListener() {
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle the save operation here
+                // Handle the add operation here
                 dispose(); // Close the dialog
             }
         });
-        panel.add(saveButton);
+        panel.add(addButton);
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose(); // Close the dialog without saving changes
+                dispose(); // Close the dialog without adding
             }
         });
         panel.add(cancelButton);
