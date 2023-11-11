@@ -5,12 +5,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginScreen extends JFrame {
+public class LoginScreenUI extends JFrame {
 
     private JTextField usernameField;
     private JPasswordField passwordField;
 
-    public LoginScreen() {
+    public LoginScreenUI() {
         // Set up the login screen
         setTitle("Pharmacy POS System - Login");
         setSize(400,300);
@@ -76,7 +76,7 @@ public class LoginScreen extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                LoginScreen loginScreen = new LoginScreen();
+                LoginScreenUI loginScreen = new LoginScreenUI();
                 loginScreen.setVisible(true);
             }
         });

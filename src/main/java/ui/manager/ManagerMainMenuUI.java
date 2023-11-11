@@ -1,13 +1,13 @@
-package ui;
+package ui.manager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ManagerMainMenu extends JFrame {
+public class ManagerMainMenuUI extends JFrame {
 
-    public ManagerMainMenu() {
+    public ManagerMainMenuUI() {
         // Set up the manager's main menu
         setTitle("Pharmacy POS System - Manager");
         setSize(600, 400); // Set window size to 600x400
@@ -60,7 +60,7 @@ public class ManagerMainMenu extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                ManagerMainMenu managerMenu = new ManagerMainMenu();
+                ManagerMainMenuUI managerMenu = new ManagerMainMenuUI();
                 managerMenu.setVisible(true);
             }
         });
