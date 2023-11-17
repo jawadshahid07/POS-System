@@ -5,11 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RestockDialog extends JDialog {
+public class RestockItemsUI extends JDialog {
 
     private JTextField quantityField;
 
-    public RestockDialog(JFrame parent, Object[] productDetails) {
+    public RestockItemsUI(JFrame parent, Object[] productDetails) {
         super(parent, "Restock Product", true);
         setSize(300, 150);
         setLocationRelativeTo(parent);

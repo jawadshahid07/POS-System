@@ -5,11 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SetAlertDialog extends JDialog {
+public class SetAlertUI extends JDialog {
 
     private JTextField quantityField;
 
-    public SetAlertDialog(JFrame parent, Object[] productDetails) {
+    public SetAlertUI(JFrame parent, Object[] productDetails) {
         super(parent, "Set Low Stock Alert", true);
         setSize(300, 150);
         setLocationRelativeTo(parent);

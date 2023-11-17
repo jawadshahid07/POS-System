@@ -5,11 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ExpiredDialog extends JDialog {
+public class ExpiredItemsUI extends JDialog {
 
     private JTextArea expiredTextArea;
 
-    public ExpiredDialog(JFrame parent, String expiredItems) {
+    public ExpiredItemsUI(JFrame parent, String expiredItems) {
         super(parent, "Show Expired Items", true);
         setSize(400, 300);
         setLocationRelativeTo(parent);

@@ -101,7 +101,7 @@ public class InventoryManagementUI extends JFrame {
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
             Object[] productDetails = getProductDetails(selectedRow);
-            SetAlertDialog setAlertDialog = new SetAlertDialog(this, productDetails);
+            SetAlertUI setAlertDialog = new SetAlertUI(this, productDetails);
             setAlertDialog.setVisible(true);
             // You may update the table after saving the alert
         } else {
@@ -118,7 +118,7 @@ public class InventoryManagementUI extends JFrame {
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
             Object[] productDetails = getProductDetails(selectedRow);
-            RestockDialog restockDialog = new RestockDialog(this, productDetails);
+            RestockItemsUI restockDialog = new RestockItemsUI(this, productDetails);
             restockDialog.setVisible(true);
             // You may update the table after restocking
         } else {
@@ -132,8 +132,8 @@ public class InventoryManagementUI extends JFrame {
     }
 
     private void showExpiredItems() {
-        ExpiredDialog showExpiredDialog = new ExpiredDialog(this, getExpiredItems());
-        showExpiredDialog.setVisible(true);
+        ExpiredItemsUI showExpiredItemsUI = new ExpiredItemsUI(this, getExpiredItems());
+        showExpiredItemsUI.setVisible(true);
         // You may update the table after showing expired items
     }
 
