@@ -10,6 +10,15 @@ public class User {
     private Role role;
 
     public User(int id, String name, String username, String password, Role role) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public void setId(int id) {
@@ -50,9 +59,6 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-    public User() {
-
     }
 
     public int login(String enteredUsername, String enteredPassword) {

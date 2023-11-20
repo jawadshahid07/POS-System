@@ -1,5 +1,11 @@
 package ui;
 
+import business.Manager;
+import business.SalesAssistant;
+import business.User;
+import ui.assistant.AssistantUI;
+import ui.manager.ManagerMainMenuUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -71,6 +77,32 @@ public class LoginScreenUI extends JFrame {
         });
 
         add(panel);
+    }
+
+    private void authenticateUser() {
+        String enteredUsername = usernameField.getText();
+        char[] enteredPasswordChars = passwordField.getPassword();
+        String enteredPassword = new String(enteredPasswordChars);
+
+        User user = new User(enteredUsername, enteredPassword);
+        int status = user.login(enteredUsername, enteredPassword);
+        if (status == 0 && user.getRole().equals(new SalesAssistant())) {
+            // Authentication successful, sales assistant credentials
+            AssistantUI assistantUI = new AssistantUI();
+        } else if (status == 0 && user.getRole().equals(new Manager())) {
+            // Authentication successful, manager credentials
+            ManagerMainMenuUI managerMainMenuUI = new ManagerMainMenuUI();
+        }
+        else if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Invalid username. Please try again.");
+        }
+        else if (status == 2) {
+            JOptionPane.showMessageDialog(this, "Invalid password. Please try again.");
+        }
+
+        // Clear fields for security
+        usernameField.setText("");
+        passwordField.setText("");
     }
 
     public static void main(String[] args) {
