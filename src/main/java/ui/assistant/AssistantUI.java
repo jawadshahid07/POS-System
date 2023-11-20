@@ -94,6 +94,7 @@ public class AssistantUI extends JFrame {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
         add(mainPanel);
+        setVisible(true);
     }
 
     private void searchProduct() {
@@ -157,15 +158,5 @@ public class AssistantUI extends JFrame {
         }
 
         totalCostLabel.setText("Total Cost: $" + String.format("%.2f", totalCost));
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                AssistantUI assistantScreen = new AssistantUI();
-                assistantScreen.setVisible(true);
-            }
-        });
     }
 }

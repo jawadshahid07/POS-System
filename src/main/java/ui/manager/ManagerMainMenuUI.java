@@ -57,14 +57,5 @@ public class ManagerMainMenuUI extends JFrame {
         add(panel);
         setVisible(true);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ManagerMainMenuUI managerMenu = new ManagerMainMenuUI();
-                managerMenu.setVisible(true);
-            }
-        });
-    }
 }
 

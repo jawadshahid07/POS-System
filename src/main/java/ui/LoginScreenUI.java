@@ -86,8 +86,6 @@ public class LoginScreenUI extends JFrame {
 
         User user = new User(enteredUsername, enteredPassword);
         int status = user.login(enteredUsername, enteredPassword);
-        System.out.println(status);
-        System.out.println(user.getRole().getName());
         if (status == 1) {
             JOptionPane.showMessageDialog(this, "Invalid username. Please try again.");
         }
@@ -105,15 +103,6 @@ public class LoginScreenUI extends JFrame {
         // Clear fields for security
         usernameField.setText("");
         passwordField.setText("");
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                LoginScreenUI loginScreen = new LoginScreenUI();
-                loginScreen.setVisible(true);
-            }
-        });
     }
 }
 
