@@ -8,3 +8,10 @@ CREATE TABLE users (
     password VARCHAR(255),
     role VARCHAR(255)
 );
+
+-- Insert admin user
+INSERT INTO users (name, username, password, role) VALUES ('Admin', 'admin', 'admin', 'Manager');
+
+-- Insert staff user
+INSERT INTO users (name, username, password, role) VALUES ('Staff', 'staff', 'staff', 'SalesAssistant');
+

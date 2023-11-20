@@ -72,7 +72,7 @@ public class LoginScreenUI extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Validate username and password here and open the manager menu if valid
+                authenticateUser();
             }
         });
 
@@ -86,6 +86,7 @@ public class LoginScreenUI extends JFrame {
 
         User user = new User(enteredUsername, enteredPassword);
         int status = user.login(enteredUsername, enteredPassword);
+        System.out.println(status);
         if (status == 0 && user.getRole().equals(new SalesAssistant())) {
             // Authentication successful, sales assistant credentials
             AssistantUI assistantUI = new AssistantUI();
