@@ -88,18 +88,18 @@ public class LoginScreenUI extends JFrame {
         int status = user.login(enteredUsername, enteredPassword);
         System.out.println(status);
         System.out.println(user.getRole().getName());
-        if (status == 0 && user.getRole().getName().equals("SalesAssistant")) {
+        if (status == 1) {
+            JOptionPane.showMessageDialog(this, "Invalid username. Please try again.");
+        }
+        else if (status == 2) {
+            JOptionPane.showMessageDialog(this, "Invalid password. Please try again.");
+        }
+        else if (status == 0 && user.getRole().getName().equals("SalesAssistant")) {
             // Authentication successful, sales assistant credentials
             AssistantUI assistantUI = new AssistantUI();
         } else if (status == 0 && user.getRole().getName().equals("Manager")) {
             // Authentication successful, manager credentials
             ManagerMainMenuUI managerMainMenuUI = new ManagerMainMenuUI();
-        }
-        else if (status == 1) {
-            JOptionPane.showMessageDialog(this, "Invalid username. Please try again.");
-        }
-        else if (status == 2) {
-            JOptionPane.showMessageDialog(this, "Invalid password. Please try again.");
         }
 
         // Clear fields for security
