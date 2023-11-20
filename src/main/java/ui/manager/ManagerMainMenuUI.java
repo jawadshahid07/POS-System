@@ -55,6 +55,7 @@ public class ManagerMainMenuUI extends JFrame {
         panel.add(buttonPanel, BorderLayout.CENTER);
 
         add(panel);
+        setVisible(true);
     }
 
     public static void main(String[] args) {

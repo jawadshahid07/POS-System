@@ -87,10 +87,11 @@ public class LoginScreenUI extends JFrame {
         User user = new User(enteredUsername, enteredPassword);
         int status = user.login(enteredUsername, enteredPassword);
         System.out.println(status);
-        if (status == 0 && user.getRole().equals(new SalesAssistant())) {
+        System.out.println(user.getRole().getName());
+        if (status == 0 && user.getRole().getName().equals("SalesAssistant")) {
             // Authentication successful, sales assistant credentials
             AssistantUI assistantUI = new AssistantUI();
-        } else if (status == 0 && user.getRole().equals(new Manager())) {
+        } else if (status == 0 && user.getRole().getName().equals("Manager")) {
             // Authentication successful, manager credentials
             ManagerMainMenuUI managerMainMenuUI = new ManagerMainMenuUI();
         }
