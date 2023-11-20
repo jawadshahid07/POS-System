@@ -1,11 +1,16 @@
 package business;
 
+import dao.UserDAO;
+
 public class User {
     private int id;
     private String name;
     private String username;
     private String password;
     private Role role;
+
+    public User(int id, String name, String username, String password, Role role) {
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -46,21 +51,26 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
-
-    public User(int id, String name, String username, String password, Role role) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
     public User() {
 
     }
 
-    public boolean login(String enteredUsername, String enteredPassword) {
-        // Check login credentials
-        return username.equals(enteredUsername) && password.equals(enteredPassword);
+    public int login(String enteredUsername, String enteredPassword) {
+        UserDAO userDAO = new UserDAO();
+        User foundUser = userDAO.getUser(enteredUsername);
+
+        if (foundUser == null) {
+            return 1; // username does not exist
+        }
+        else if (foundUser.getPassword().equals(enteredPassword)) {
+            this.id = foundUser.getId();
+            this.name = foundUser.getName();
+            this.role = foundUser.getRole();
+            return 0; // matching details
+        }
+        else {
+            return 2; // invalid password
+        }
     }
 
     public void save() {
