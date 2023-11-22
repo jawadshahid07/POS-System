@@ -5,7 +5,6 @@ public class SalesAssistant extends Role {
 
     public SalesAssistant() {
         super();
-        this.name = "SalesAssistant";
     }
 
     public void processOrders() {
@@ -13,7 +12,7 @@ public class SalesAssistant extends Role {
     }
 
     @Override
-    public void permissions() {
-        // Implementation of sales assistant's permissions
+    public String permissions() {
+        return "SalesAssistant";
     }
 }

@@ -92,10 +92,10 @@ public class LoginScreenUI extends JFrame {
         else if (status == 2) {
             JOptionPane.showMessageDialog(this, "Invalid password. Please try again.");
         }
-        else if (status == 0 && user.getRole().getName().equals("SalesAssistant")) {
+        else if (status == 0 && user.getRole().permissions().equals("SalesAssistant")) {
             // Authentication successful, sales assistant credentials
             AssistantUI assistantUI = new AssistantUI();
-        } else if (status == 0 && user.getRole().getName().equals("Manager")) {
+        } else if (status == 0 && user.getRole().permissions().equals("Manager")) {
             // Authentication successful, manager credentials
             ManagerMainMenuUI managerMainMenuUI = new ManagerMainMenuUI();
         }
