@@ -55,15 +55,7 @@ public class ManagerMainMenuUI extends JFrame {
         panel.add(buttonPanel, BorderLayout.CENTER);
 
         add(panel);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ManagerMainMenuUI managerMenu = new ManagerMainMenuUI();
-                managerMenu.setVisible(true);
-            }
-        });
+        setVisible(true);
     }
 }
 
