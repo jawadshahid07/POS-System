@@ -13,7 +13,6 @@ import java.util.Objects;
 
 public class ProductCatalogUI extends JFrame {
 
-    //private List<Product> productList;
     private JComboBox<String> categoryComboBox;
     private JTable productTable;
 
@@ -22,8 +21,6 @@ public class ProductCatalogUI extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        //productList = new ArrayList<>(); // Initialize or load your product data here
 
         // Create a panel for the main content
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -52,7 +49,8 @@ public class ProductCatalogUI extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Create a panel for buttons
-        JPanel buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+
         JButton addButton = new JButton("Add Product");
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -77,9 +75,18 @@ public class ProductCatalogUI extends JFrame {
             }
         });
 
+        JButton manageCategoriesButton = new JButton("Manage Categories");
+        manageCategoriesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openManageCategoriesDialog();
+            }
+        });
+
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(editButton);
+        buttonPanel.add(manageCategoriesButton);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -93,8 +100,14 @@ public class ProductCatalogUI extends JFrame {
         int i = 0;
         for (Category c : categories) {
             categoryNames[i] = c.getName();
+            i++;
         }
         return categoryNames;
+    }
+
+    public void updateCategories() {
+        String[] categoryNames = getCategories();
+        categoryComboBox.setModel(new DefaultComboBoxModel<>(categoryNames));
     }
 
     private void updateTable() {
@@ -159,12 +172,15 @@ public class ProductCatalogUI extends JFrame {
         return null;
     }
 
+    private void openManageCategoriesDialog() {
+        new CategoryManagementDialog(this);
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ProductCatalogUI catalogScreen = new ProductCatalogUI();
-                catalogScreen.setVisible(true);
+                new ProductCatalogUI().setVisible(true);
             }
         });
     }

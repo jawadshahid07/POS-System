@@ -31,7 +31,7 @@ public class CategoryDAO {
                         String name = resultSet.getString("name");
                         String description = resultSet.getString("description");
 
-                        Category category = new Category(code, name, description);
+                        Category category = new Category(name, description);
                         Set<Product> products = getProductsByCategoryCode(code);
                         category.setProducts(products);
 
@@ -48,11 +48,10 @@ public class CategoryDAO {
 
     public void addCategory(Category category) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String query = "INSERT INTO categories (code, name, description) VALUES (?, ?, ?)";
+            String query = "INSERT INTO categories (name, description) VALUES (?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, category.getCode());
-                preparedStatement.setString(2, category.getName());
-                preparedStatement.setString(3, category.getDescription());
+                preparedStatement.setString(1, category.getName());
+                preparedStatement.setString(2, category.getDescription());
 
                 preparedStatement.executeUpdate();
             }
@@ -94,7 +93,21 @@ public class CategoryDAO {
         return products;
     }
 
-    public void removeCategory(Category selectedCategory) {
+    public void removeCategory(String selectedCategory) {
+        String sql = "DELETE FROM categories WHERE name = ?";
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, selectedCategory);
+
+            // Execute the delete operation
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately (logging, throwing custom exceptions, etc.)
+        }
     }
 }
 

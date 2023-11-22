@@ -18,7 +18,7 @@ INSERT INTO users (name, username, password, role) VALUES ('Staff', 'staff', 'st
 
 -- for maintaining products in database
 CREATE TABLE products (
-    code INT PRIMARY KEY,
+    code INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     description VARCHAR(255),
     stockQuantity INT,
@@ -27,7 +27,7 @@ CREATE TABLE products (
 
 -- for maintaining categories in database
 CREATE TABLE categories (
-    code INT PRIMARY KEY,
+    code INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     description VARCHAR(255)
 );
@@ -40,4 +40,3 @@ CREATE TABLE product_category (
     FOREIGN KEY (productCode) REFERENCES products(code),
     FOREIGN KEY (categoryCode) REFERENCES categories(code)
 );
-

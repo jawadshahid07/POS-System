@@ -10,8 +10,7 @@ public class Category {
     private Set<Product> items;
     private Set<Category> subcategories;
 
-    public Category(int code, String name, String description) {
-        this.code = code;
+    public Category(String name, String description) {
         this.name = name;
         this.description = description;
         this.items = new HashSet<>();
@@ -20,6 +19,10 @@ public class Category {
 
     public int getCode() {
         return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getName() {

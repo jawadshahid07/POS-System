@@ -76,7 +76,7 @@ public class ProductDAO {
                         String name = resultSet.getString("name");
                         String description = resultSet.getString("description");
 
-                        Category category = new Category(code, name, description);
+                        Category category = new Category(name, description);
                         categories.add(category);
                     }
                 }

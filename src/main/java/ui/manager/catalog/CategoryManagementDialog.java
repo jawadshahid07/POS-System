@@ -12,14 +12,16 @@ import java.util.List;
 public class CategoryManagementDialog extends JDialog {
     private CategoryDAO categoryDAO;
 
-    private DefaultListModel<Category> categoryListModel;
-    private JList<Category> categoryList;
+    private DefaultListModel<String> categoryListModel;
+    private JList<String> categoryList;
     private JButton addButton;
     private JButton deleteButton;
+    private ProductCatalogUI parent;
 
-    public CategoryManagementDialog(JFrame parent) {
+    public CategoryManagementDialog(ProductCatalogUI parent) {
         super(parent, "Category Management", true);
         this.categoryDAO = new CategoryDAO();
+        this.parent = parent;
 
         setSize(400, 300);
         setLocationRelativeTo(parent);
@@ -69,21 +71,22 @@ public class CategoryManagementDialog extends JDialog {
         List<Category> categories = categoryDAO.getAllCategories();
         categoryListModel.clear();
         for (Category category : categories) {
-            categoryListModel.addElement(category);
+            categoryListModel.addElement(category.getName());
         }
     }
 
     private void addCategory() {
         String categoryName = JOptionPane.showInputDialog(this, "Enter Category Name:");
         if (categoryName != null && !categoryName.trim().isEmpty()) {
-            Category newCategory = new Category(0, categoryName, "");
+            Category newCategory = new Category(categoryName, "");
             categoryDAO.addCategory(newCategory);
             loadCategories();
+            parent.updateCategories();
         }
     }
 
     private void deleteCategory() {
-        Category selectedCategory = categoryList.getSelectedValue();
+        String selectedCategory = categoryList.getSelectedValue();
         if (selectedCategory != null) {
             int confirm = JOptionPane.showConfirmDialog(
                     this,
@@ -95,6 +98,7 @@ public class CategoryManagementDialog extends JDialog {
             if (confirm == JOptionPane.YES_OPTION) {
                 categoryDAO.removeCategory(selectedCategory);
                 loadCategories();
+                parent.updateCategories();
             }
         } else {
             JOptionPane.showMessageDialog(this, "Please select a category to delete.", "Delete Category", JOptionPane.WARNING_MESSAGE);
