@@ -4,6 +4,7 @@ import business.productCatalog.Category;
 import dao.CategoryDAO;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,10 +13,11 @@ import java.util.List;
 public class CategoryManagementDialog extends JDialog {
     private CategoryDAO categoryDAO;
 
-    private DefaultListModel<String> categoryListModel;
-    private JList<String> categoryList;
+    private JTable categoryTable;
     private JButton addButton;
     private JButton deleteButton;
+    private JTextField nameField;
+    private JTextField descriptionField;
     private ProductCatalogUI parent;
 
     public CategoryManagementDialog(ProductCatalogUI parent) {
@@ -23,7 +25,7 @@ public class CategoryManagementDialog extends JDialog {
         this.categoryDAO = new CategoryDAO();
         this.parent = parent;
 
-        setSize(400, 300);
+        setSize(600, 400);
         setLocationRelativeTo(parent);
 
         initComponents();
@@ -35,10 +37,11 @@ public class CategoryManagementDialog extends JDialog {
     private void initComponents() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Category List
-        categoryListModel = new DefaultListModel<>();
-        categoryList = new JList<>(categoryListModel);
-        JScrollPane categoryScrollPane = new JScrollPane(categoryList);
+        // Category Table
+        String[] columnNames = {"Code", "Name", "Description"};
+        DefaultTableModel model = new DefaultTableModel(null, columnNames);
+        categoryTable = new JTable(model);
+        JScrollPane categoryScrollPane = new JScrollPane(categoryTable);
         mainPanel.add(categoryScrollPane, BorderLayout.CENTER);
 
         // Buttons Panel
@@ -62,6 +65,15 @@ public class CategoryManagementDialog extends JDialog {
         });
         buttonPanel.add(deleteButton);
 
+        // Add Name and Description Fields
+        nameField = new JTextField(15);
+        descriptionField = new JTextField(15);
+
+        buttonPanel.add(new JLabel("Name:"));
+        buttonPanel.add(nameField);
+        buttonPanel.add(new JLabel("Description:"));
+        buttonPanel.add(descriptionField);
+
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -69,40 +81,66 @@ public class CategoryManagementDialog extends JDialog {
 
     private void loadCategories() {
         List<Category> categories = categoryDAO.getAllCategories();
-        categoryListModel.clear();
+        DefaultTableModel model = (DefaultTableModel) categoryTable.getModel();
+        model.setRowCount(0);
+
         for (Category category : categories) {
-            categoryListModel.addElement(category.getName());
+            model.addRow(new Object[]{category.getCode(), category.getName(), category.getDescription()});
         }
     }
 
     private void addCategory() {
-        String categoryName = JOptionPane.showInputDialog(this, "Enter Category Name:");
-        if (categoryName != null && !categoryName.trim().isEmpty()) {
-            Category newCategory = new Category(categoryName, "");
-            categoryDAO.addCategory(newCategory);
-            loadCategories();
-            parent.updateCategories();
+        JTextField nameField = new JTextField();
+        JTextField descriptionField = new JTextField();
+
+        Object[] message = {
+                "Name:", nameField,
+                "Description:", descriptionField
+        };
+
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                message,
+                "Add Category",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (option == JOptionPane.OK_OPTION) {
+            String categoryName = nameField.getText().trim();
+            String categoryDescription = descriptionField.getText().trim();
+
+            if (!categoryName.isEmpty()) {
+                Integer categoryCode = null; // Let the database generate the code
+
+                Category newCategory = new Category(categoryName, categoryDescription);
+                categoryDAO.addCategory(newCategory);
+                loadCategories();
+                parent.updateCategories();
+            }
         }
     }
 
     private void deleteCategory() {
-        String selectedCategory = categoryList.getSelectedValue();
-        if (selectedCategory != null) {
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "Are you sure you want to delete the selected category?",
-                    "Confirm Delete",
-                    JOptionPane.YES_NO_OPTION
-            );
+        int selectedRow = categoryTable.getSelectedRow();
+        if (selectedRow != -1) {
+            Integer selectedCategoryCode = (Integer) categoryTable.getValueAt(selectedRow, 0);
 
-            if (confirm == JOptionPane.YES_OPTION) {
-                categoryDAO.removeCategory(selectedCategory);
-                loadCategories();
-                parent.updateCategories();
+            if (selectedCategoryCode != null) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to delete the selected category?",
+                        "Confirm Delete",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    categoryDAO.removeCategory(selectedCategoryCode);
+                    loadCategories();
+                    parent.updateCategories();
+                }
             }
         } else {
             JOptionPane.showMessageDialog(this, "Please select a category to delete.", "Delete Category", JOptionPane.WARNING_MESSAGE);
         }
     }
 }
-

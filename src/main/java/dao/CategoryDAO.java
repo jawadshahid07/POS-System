@@ -32,6 +32,7 @@ public class CategoryDAO {
                         String description = resultSet.getString("description");
 
                         Category category = new Category(name, description);
+                        category.setCode(code);
                         Set<Product> products = getProductsByCategoryCode(code);
                         category.setProducts(products);
 
@@ -93,13 +94,13 @@ public class CategoryDAO {
         return products;
     }
 
-    public void removeCategory(String selectedCategory) {
-        String sql = "DELETE FROM categories WHERE name = ?";
+    public void removeCategory(int code) {
+        String sql = "DELETE FROM categories WHERE code = ?";
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, selectedCategory);
+            preparedStatement.setInt(1, code);
 
             // Execute the delete operation
             preparedStatement.executeUpdate();
