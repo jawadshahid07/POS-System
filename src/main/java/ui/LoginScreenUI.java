@@ -1,8 +1,6 @@
 package ui;
 
-import business.Manager;
-import business.SalesAssistant;
-import business.User;
+import business.userAuth.User;
 import ui.assistant.AssistantUI;
 import ui.manager.ManagerMainMenuUI;
 
