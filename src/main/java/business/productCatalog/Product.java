@@ -75,6 +75,10 @@ public class Product {
     public void removeItem(Item item) {
         items.remove(item);
     }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
 }
 
 

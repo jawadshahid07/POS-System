@@ -59,6 +59,10 @@ public class Category {
             items.remove(productItem.getProduct());
         }
     }
+
+    public void setProducts(Set<Product> products) {
+        this.items = products;
+    }
 }
 
 
