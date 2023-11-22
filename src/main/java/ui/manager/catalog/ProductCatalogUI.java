@@ -1,10 +1,14 @@
 package ui.manager.catalog;
 
+import business.productCatalog.Category;
+import dao.CategoryDAO;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Objects;
 
 public class ProductCatalogUI extends JFrame {
@@ -83,8 +87,14 @@ public class ProductCatalogUI extends JFrame {
     }
 
     private String[] getCategories() {
-        // Return your list of categories
-        return new String[]{"Category 1", "Category 2", "Category 3"};
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> categories = categoryDAO.getAllCategories();
+        String[] categoryNames = new String[categories.size()];
+        int i = 0;
+        for (Category c : categories) {
+            categoryNames[i] = c.getName();
+        }
+        return categoryNames;
     }
 
     private void updateTable() {

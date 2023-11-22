@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO {
-    private static final String JDBC_URL = "jdbc:mysql://your-mysql-host:your-mysql-port/your-database";
-    private static final String JDBC_USER = "your-mysql-username";
-    private static final String JDBC_PASSWORD = "your-mysql-password";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pos_system";
+    private static final String JDBC_USER = "root";
+    private static final String JDBC_PASSWORD = "1234";
 
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
