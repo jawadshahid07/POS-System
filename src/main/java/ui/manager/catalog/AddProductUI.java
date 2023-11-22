@@ -1,44 +1,71 @@
 package ui.manager.catalog;
 
+import business.productCatalog.Category;
+import dao.CategoryDAO;
+import dao.ProductCategoryDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddProductUI extends JDialog {
 
     private JTextField nameField;
     private JTextField priceField;
     private JTextField quantityField;
+    private JTextField descriptionField;
+    private JPanel categoryPanel;
+    private ProductCatalogUI parent;
 
-    public AddProductUI(JFrame parent) {
+    public AddProductUI(ProductCatalogUI parent) {
         super(parent, "Add Product", true);
-        setSize(300, 200);
+        this.parent = parent;
+        setSize(400, 300);
         setLocationRelativeTo(parent);
 
-        JPanel panel = new JPanel(new GridLayout(4, 2));
+        JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(new JLabel("Name:"));
+        // Input fields
+        JPanel inputPanel = new JPanel(new GridLayout(4, 2));
+        inputPanel.add(new JLabel("Name:"));
         nameField = new JTextField();
-        panel.add(nameField);
+        inputPanel.add(nameField);
 
-        panel.add(new JLabel("Price:"));
-        priceField = new JTextField();
-        panel.add(priceField);
+        inputPanel.add(new JLabel("Description:"));
+        descriptionField = new JTextField();
+        inputPanel.add(descriptionField);
 
-        panel.add(new JLabel("Quantity:"));
+        inputPanel.add(new JLabel("Stock Quantity:"));
         quantityField = new JTextField();
-        panel.add(quantityField);
+        inputPanel.add(quantityField);
 
+        inputPanel.add(new JLabel("Price:"));
+        priceField = new JTextField();
+        inputPanel.add(priceField);
+
+        // Category selection
+        categoryPanel = new JPanel(new GridLayout(0, 1));
+        JScrollPane categoryScrollPane = new JScrollPane(categoryPanel);
+        inputPanel.add(new JLabel("Select Categories:"));
+        inputPanel.add(categoryScrollPane);
+
+        loadCategories();
+
+        panel.add(inputPanel, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle the add operation here
-                dispose(); // Close the dialog
+                addProduct();
             }
         });
-        panel.add(addButton);
+        buttonPanel.add(addButton);
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
@@ -47,9 +74,43 @@ public class AddProductUI extends JDialog {
                 dispose(); // Close the dialog without adding
             }
         });
-        panel.add(cancelButton);
+        buttonPanel.add(cancelButton);
+
+        panel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(panel);
     }
-}
 
+    private void loadCategories() {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> allCategories = categoryDAO.getAllCategories();
+
+        for (Category category : allCategories) {
+            JCheckBox checkBox = new JCheckBox(category.getName());
+            categoryPanel.add(checkBox);
+        }
+    }
+
+    private List<String> getSelectedCategories() {
+        List<String> selectedCategories = new ArrayList<>();
+        Component[] components = categoryPanel.getComponents();
+        for (Component component : components) {
+            if (component instanceof JCheckBox) {
+                JCheckBox checkBox = (JCheckBox) component;
+                if (checkBox.isSelected()) {
+                    selectedCategories.add(checkBox.getText());
+                }
+            }
+        }
+        return selectedCategories;
+    }
+
+    private void addProduct() {
+        String name = nameField.getText();
+        double price = Double.parseDouble(priceField.getText());
+        int quantity = Integer.parseInt(quantityField.getText());
+        String description = descriptionField.getText();
+        List<String> selectedCategories = getSelectedCategories();
+        Category.addProduct(name, description, quantity, price, selectedCategories);
+    }
+}

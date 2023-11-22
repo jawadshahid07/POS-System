@@ -16,8 +16,6 @@ public class CategoryManagementDialog extends JDialog {
     private JTable categoryTable;
     private JButton addButton;
     private JButton deleteButton;
-    private JTextField nameField;
-    private JTextField descriptionField;
     private ProductCatalogUI parent;
 
     public CategoryManagementDialog(ProductCatalogUI parent) {
@@ -65,15 +63,6 @@ public class CategoryManagementDialog extends JDialog {
         });
         buttonPanel.add(deleteButton);
 
-        // Add Name and Description Fields
-        nameField = new JTextField(15);
-        descriptionField = new JTextField(15);
-
-        buttonPanel.add(new JLabel("Name:"));
-        buttonPanel.add(nameField);
-        buttonPanel.add(new JLabel("Description:"));
-        buttonPanel.add(descriptionField);
-
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -110,10 +99,8 @@ public class CategoryManagementDialog extends JDialog {
             String categoryDescription = descriptionField.getText().trim();
 
             if (!categoryName.isEmpty()) {
-                Integer categoryCode = null; // Let the database generate the code
-
                 Category newCategory = new Category(categoryName, categoryDescription);
-                categoryDAO.addCategory(newCategory);
+                newCategory.addCategory(newCategory);
                 loadCategories();
                 parent.updateCategories();
             }
@@ -124,6 +111,9 @@ public class CategoryManagementDialog extends JDialog {
         int selectedRow = categoryTable.getSelectedRow();
         if (selectedRow != -1) {
             Integer selectedCategoryCode = (Integer) categoryTable.getValueAt(selectedRow, 0);
+            String selectedCategoryName = (String) categoryTable.getValueAt(selectedRow, 1);
+            String selectedCategoryDescription = (String) categoryTable.getValueAt(selectedRow, 2);
+
 
             if (selectedCategoryCode != null) {
                 int confirm = JOptionPane.showConfirmDialog(
@@ -134,7 +124,8 @@ public class CategoryManagementDialog extends JDialog {
                 );
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    categoryDAO.removeCategory(selectedCategoryCode);
+                    Category c = new Category(selectedCategoryCode, selectedCategoryName, selectedCategoryDescription);
+                    c.removeCategory(c);
                     loadCategories();
                     parent.updateCategories();
                 }

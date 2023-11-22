@@ -12,8 +12,7 @@ public class Product {
     private Set<Category> categories;
     private Set<Item> items;
 
-    public Product(int code, String name, String description, int stockQuantity, double price) {
-        this.code = code;
+    public Product(String name, String description, int stockQuantity, double price) {
         this.name = name;
         this.description = description;
         this.stockQuantity = stockQuantity;
@@ -24,6 +23,9 @@ public class Product {
 
     public int getCode() {
         return code;
+    }
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getName() {

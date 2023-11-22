@@ -79,7 +79,7 @@ public class CategoryDAO {
                         int stockQuantity = resultSet.getInt("stockQuantity");
                         double price = resultSet.getDouble("price");
 
-                        Product product = new Product(code, name, description, stockQuantity, price);
+                        Product product = new Product(name, description, stockQuantity, price);
                         Set<Category> categories = new ProductDAO().getCategoriesByProductCode(code);
                         product.setCategories(categories);
 

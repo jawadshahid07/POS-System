@@ -28,7 +28,7 @@ public class ProductDAO {
                         int stockQuantity = resultSet.getInt("stockQuantity");
                         double price = resultSet.getDouble("price");
 
-                        Product product = new Product(code, name, description, stockQuantity, price);
+                        Product product = new Product(name, description, stockQuantity, price);
                         Set<Category> categories = getCategoriesByProductCode(code);
                         product.setCategories(categories);
 
@@ -45,13 +45,12 @@ public class ProductDAO {
 
     public void addProduct(Product product) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String query = "INSERT INTO products (code, name, description, stockQuantity, price) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO products (name, description, stockQuantity, price, categoryCode) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, product.getCode());
-                preparedStatement.setString(2, product.getName());
-                preparedStatement.setString(3, product.getDescription());
-                preparedStatement.setInt(4, product.getStockQuantity());
-                preparedStatement.setDouble(5, product.getPrice());
+                preparedStatement.setString(1, product.getName());
+                preparedStatement.setString(2, product.getDescription());
+                preparedStatement.setInt(3, product.getStockQuantity());
+                preparedStatement.setDouble(4, product.getPrice());
 
                 preparedStatement.executeUpdate();
             }

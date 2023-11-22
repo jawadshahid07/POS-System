@@ -1,6 +1,10 @@
 package business.productCatalog;
 
+import dao.CategoryDAO;
+import dao.ProductDAO;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Category {
@@ -11,6 +15,13 @@ public class Category {
     private Set<Category> subcategories;
 
     public Category(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.items = new HashSet<>();
+        this.subcategories = new HashSet<>();
+    }
+    public Category(int code, String name, String description) {
+        this.code = code;
         this.name = name;
         this.description = description;
         this.items = new HashSet<>();
@@ -42,11 +53,13 @@ public class Category {
     }
 
     public void addCategory(Category category) {
-        subcategories.add(category);
+        CategoryDAO categoryDAO = new CategoryDAO();
+        categoryDAO.addCategory(category);
     }
 
     public void removeCategory(Category category) {
-        subcategories.remove(category);
+        CategoryDAO categoryDAO = new CategoryDAO();
+        categoryDAO.removeCategory(category.getCode());
     }
 
     public void addItem(Product item) {
@@ -65,6 +78,12 @@ public class Category {
 
     public void setProducts(Set<Product> products) {
         this.items = products;
+    }
+
+    public static void addProduct(String name, String description, int quantity, double price, List<String> categoryNames) {
+        ProductDAO productDAO = new ProductDAO();
+        //Product p = new Product();
+        //productDAO.addProduct(new Product);
     }
 }
 
