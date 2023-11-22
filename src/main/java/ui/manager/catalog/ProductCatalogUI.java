@@ -53,7 +53,7 @@ public class ProductCatalogUI extends JFrame {
 
         // Create a panel for buttons
         JPanel buttonPanel = new JPanel();
-        JButton addButton = new JButton("Add");
+        JButton addButton = new JButton("Add Product");
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -61,7 +61,7 @@ public class ProductCatalogUI extends JFrame {
             }
         });
 
-        JButton deleteButton = new JButton("Delete");
+        JButton deleteButton = new JButton("Delete Product");
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,7 +69,7 @@ public class ProductCatalogUI extends JFrame {
             }
         });
 
-        JButton editButton = new JButton("Edit");
+        JButton editButton = new JButton("Edit Product");
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

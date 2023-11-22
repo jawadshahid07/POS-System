@@ -93,5 +93,8 @@ public class CategoryDAO {
 
         return products;
     }
+
+    public void removeCategory(Category selectedCategory) {
+    }
 }
 
