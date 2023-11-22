@@ -11,21 +11,25 @@ public class Category {
     private int code;
     private String name;
     private String description;
-    private Set<Product> items;
+    private Set<Product> products;
     private Set<Category> subcategories;
 
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
-        this.items = new HashSet<>();
+        this.products = new HashSet<>();
         this.subcategories = new HashSet<>();
     }
     public Category(int code, String name, String description) {
         this.code = code;
         this.name = name;
         this.description = description;
-        this.items = new HashSet<>();
+        this.products = new HashSet<>();
         this.subcategories = new HashSet<>();
+    }
+
+    public Category() {
+
     }
 
     public int getCode() {
@@ -44,12 +48,15 @@ public class Category {
         return description;
     }
 
-    public Set<Product> getItems() {
-        return items;
+    public Set<Product> getProducts() {
+        return products;
     }
 
     public Set<Category> getSubcategories() {
         return subcategories;
+    }
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     public void addCategory(Category category) {
@@ -62,28 +69,18 @@ public class Category {
         categoryDAO.removeCategory(category.getCode());
     }
 
-    public void addItem(Product item) {
-        items.add(item);
-        for (Item productItem : item.getItems()) {
-            items.add(productItem.getProduct());
-        }
-    }
-
-    public void removeItem(Product item) {
-        items.remove(item);
-        for (Item productItem : item.getItems()) {
-            items.remove(productItem.getProduct());
-        }
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.items = products;
-    }
-
-    public static void addProduct(String name, String description, int quantity, double price, List<String> categoryNames) {
+    public void addProduct(Product product) {
         ProductDAO productDAO = new ProductDAO();
-        //Product p = new Product();
-        //productDAO.addProduct(new Product);
+        productDAO.addProduct(product);
+    }
+    public void removeProduct(){
+        ProductDAO productDAO = new ProductDAO();
+        //productDAO.removeProduct(product);
+    }
+
+    public int getCategoryCode(String categoryName) {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        return categoryDAO.getCategoryCodeByName(categoryName);
     }
 }
 

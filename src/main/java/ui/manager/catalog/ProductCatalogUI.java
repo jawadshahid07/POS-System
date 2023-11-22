@@ -1,7 +1,9 @@
 package ui.manager.catalog;
 
 import business.productCatalog.Category;
+import business.productCatalog.Product;
 import dao.CategoryDAO;
+import dao.ProductDAO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,6 +17,7 @@ public class ProductCatalogUI extends JFrame {
 
     private JComboBox<String> categoryComboBox;
     private JTable productTable;
+    private List<Category> categories; // Added to store all categories
 
     public ProductCatalogUI() {
         setTitle("Product Catalog");
@@ -28,7 +31,9 @@ public class ProductCatalogUI extends JFrame {
         // Create a panel for the category selection
         JPanel categoryPanel = new JPanel();
         JLabel categoryLabel = new JLabel("Select Category:");
-        categoryComboBox = new JComboBox<>(getCategories());
+
+        categories = getCategories(); // Store all categories for later use
+        categoryComboBox = new JComboBox<>(getCategoryNames());
         categoryComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,9 +47,9 @@ public class ProductCatalogUI extends JFrame {
         mainPanel.add(categoryPanel, BorderLayout.NORTH);
 
         // Create a table to display the product catalog
-        String[] columnNames = {"Product ID", "Name", "Price", "Quantity"};
-        Object[][] data = new Object[4][4];
-        productTable = new JTable(data, columnNames);
+        String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
+        DefaultTableModel model = new DefaultTableModel(null, columnNames);
+        productTable = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(productTable);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -91,11 +96,15 @@ public class ProductCatalogUI extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+        updateTable(); // Initially update the table with all products
     }
 
-    private String[] getCategories() {
+    private List<Category> getCategories() {
         CategoryDAO categoryDAO = new CategoryDAO();
-        List<Category> categories = categoryDAO.getAllCategories();
+        return categoryDAO.getAllCategories();
+    }
+
+    private String[] getCategoryNames() {
         String[] categoryNames = new String[categories.size()];
         int i = 0;
         for (Category c : categories) {
@@ -106,20 +115,30 @@ public class ProductCatalogUI extends JFrame {
     }
 
     public void updateCategories() {
-        String[] categoryNames = getCategories();
+        categories = getCategories();
+        String[] categoryNames = getCategoryNames();
         categoryComboBox.setModel(new DefaultComboBoxModel<>(categoryNames));
     }
 
-    private void updateTable() {
+    public void updateTable() {
         // Update the table based on the selected category
-        // You may need to filter your productList based on the selected category
-        // and update the JTable accordingly.
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+        Product product = new Product();
+        List<Product> products = product.getProductsByCategory(selectedCategory);
+
+        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+        model.setRowCount(0);
+
+        for (Product p : products) {
+            model.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice()});
+        }
     }
 
     private void openAddDialog() {
         AddProductUI addDialog = new AddProductUI(this);
         addDialog.setVisible(true);
         // Handle the result of the add operation here
+        updateTable(); // Update the table after adding a new product
     }
 
     private void openDeleteDialog() {
@@ -134,10 +153,8 @@ public class ProductCatalogUI extends JFrame {
 
             if (confirm == JOptionPane.YES_OPTION) {
                 DefaultTableModel model = (DefaultTableModel) productTable.getModel();
-                model.removeRow(selectedRow);
-
-                // Optionally, you can also remove the product from your productList
-                // productList.remove(selectedRow);
+                int productId = (int) model.getValueAt(selectedRow, 0);
+                //ProductDAO.deleteProduct(productId);
 
                 // Update the table after deletion
                 updateTable();
@@ -156,6 +173,7 @@ public class ProductCatalogUI extends JFrame {
         EditProductUI editDialog = new EditProductUI(this, Objects.requireNonNull(getProductDetails()));
         editDialog.setVisible(true);
         // Handle the result of the edit operation here
+        updateTable(); // Update the table after editing a product
     }
 
     private Object[] getProductDetails() {

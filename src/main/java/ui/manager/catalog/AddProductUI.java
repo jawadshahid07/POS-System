@@ -1,14 +1,13 @@
 package ui.manager.catalog;
 
 import business.productCatalog.Category;
+import business.productCatalog.Product;
 import dao.CategoryDAO;
-import dao.ProductCategoryDAO;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddProductUI extends JDialog {
@@ -17,7 +16,7 @@ public class AddProductUI extends JDialog {
     private JTextField priceField;
     private JTextField quantityField;
     private JTextField descriptionField;
-    private JPanel categoryPanel;
+    private JComboBox<String> categoryComboBox; // Change to JComboBox
     private ProductCatalogUI parent;
 
     public AddProductUI(ProductCatalogUI parent) {
@@ -29,7 +28,7 @@ public class AddProductUI extends JDialog {
         JPanel panel = new JPanel(new BorderLayout());
 
         // Input fields
-        JPanel inputPanel = new JPanel(new GridLayout(4, 2));
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2));
         inputPanel.add(new JLabel("Name:"));
         nameField = new JTextField();
         inputPanel.add(nameField);
@@ -46,11 +45,10 @@ public class AddProductUI extends JDialog {
         priceField = new JTextField();
         inputPanel.add(priceField);
 
-        // Category selection
-        categoryPanel = new JPanel(new GridLayout(0, 1));
-        JScrollPane categoryScrollPane = new JScrollPane(categoryPanel);
-        inputPanel.add(new JLabel("Select Categories:"));
-        inputPanel.add(categoryScrollPane);
+        // Category selection using JComboBox
+        inputPanel.add(new JLabel("Select Category:"));
+        categoryComboBox = new JComboBox<>();
+        inputPanel.add(categoryComboBox);
 
         loadCategories();
 
@@ -86,23 +84,8 @@ public class AddProductUI extends JDialog {
         List<Category> allCategories = categoryDAO.getAllCategories();
 
         for (Category category : allCategories) {
-            JCheckBox checkBox = new JCheckBox(category.getName());
-            categoryPanel.add(checkBox);
+            categoryComboBox.addItem(category.getName());
         }
-    }
-
-    private List<String> getSelectedCategories() {
-        List<String> selectedCategories = new ArrayList<>();
-        Component[] components = categoryPanel.getComponents();
-        for (Component component : components) {
-            if (component instanceof JCheckBox) {
-                JCheckBox checkBox = (JCheckBox) component;
-                if (checkBox.isSelected()) {
-                    selectedCategories.add(checkBox.getText());
-                }
-            }
-        }
-        return selectedCategories;
     }
 
     private void addProduct() {
@@ -110,7 +93,11 @@ public class AddProductUI extends JDialog {
         double price = Double.parseDouble(priceField.getText());
         int quantity = Integer.parseInt(quantityField.getText());
         String description = descriptionField.getText();
-        List<String> selectedCategories = getSelectedCategories();
-        Category.addProduct(name, description, quantity, price, selectedCategories);
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+        Category c = new Category();
+        Product product = new Product(name, description, quantity, price, c.getCategoryCode(selectedCategory));
+        c.addProduct(product);
+        parent.updateTable();
+        dispose();
     }
 }

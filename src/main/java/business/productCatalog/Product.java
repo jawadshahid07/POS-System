@@ -1,6 +1,10 @@
 package business.productCatalog;
 
+import dao.CategoryDAO;
+import dao.ProductDAO;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Product {
@@ -9,16 +13,18 @@ public class Product {
     private String description;
     private int stockQuantity;
     private double price;
-    private Set<Category> categories;
-    private Set<Item> items;
+    private int categoryCode;
 
-    public Product(String name, String description, int stockQuantity, double price) {
+    public Product(String name, String description, int stockQuantity, double price, int categoryCode) {
         this.name = name;
         this.description = description;
         this.stockQuantity = stockQuantity;
         this.price = price;
-        this.categories = new HashSet<>();
-        this.items = new HashSet<>();
+        this.categoryCode = categoryCode;
+    }
+
+    public Product() {
+
     }
 
     public int getCode() {
@@ -43,14 +49,7 @@ public class Product {
     public double getPrice() {
         return price;
     }
-
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
-    public Set<Item> getItems() {
-        return items;
-    }
+    public int getCategoryCode() {return categoryCode;}
 
     public void updateStock(int quantity) {
         this.stockQuantity += quantity;
@@ -60,26 +59,11 @@ public class Product {
         return price;
     }
 
-    public void addCategory(Category category) {
-        categories.add(category);
-        category.addItem(this);
-    }
-
-    public void removeCategory(Category category) {
-        categories.remove(category);
-        category.removeItem(this);
-    }
-
-    public void addItem(Item item) {
-        items.add(item);
-    }
-
-    public void removeItem(Item item) {
-        items.remove(item);
-    }
-
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
+    public List<Product> getProductsByCategory(String categoryName) {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        int catCode = categoryDAO.getCategoryCodeByName(categoryName);
+        ProductDAO productDAO = new ProductDAO();
+        return productDAO.getProductsByCategoryCode(catCode);
     }
 }
 

@@ -33,8 +33,8 @@ public class CategoryDAO {
 
                         Category category = new Category(name, description);
                         category.setCode(code);
-                        Set<Product> products = getProductsByCategoryCode(code);
-                        category.setProducts(products);
+                        //Set<Product> products = getProductsByCategoryCode(code);
+                        //category.setProducts(products);
 
                         categories.add(category);
                     }
@@ -61,37 +61,22 @@ public class CategoryDAO {
         }
     }
 
-    public Set<Product> getProductsByCategoryCode(int categoryCode) {
-        Set<Product> products = new HashSet<>();
-
+    public int getCategoryCodeByName(String categoryName) {
+        int code = 0;
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String query = "SELECT p.* FROM products p " +
-                    "JOIN product_category pc ON p.code = pc.productCode " +
-                    "WHERE pc.categoryCode = ?";
+            String query = "SELECT * FROM categories WHERE name = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, categoryCode);
-
+                preparedStatement.setString(1, categoryName);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
-                        int code = resultSet.getInt("code");
-                        String name = resultSet.getString("name");
-                        String description = resultSet.getString("description");
-                        int stockQuantity = resultSet.getInt("stockQuantity");
-                        double price = resultSet.getDouble("price");
-
-                        Product product = new Product(name, description, stockQuantity, price);
-                        Set<Category> categories = new ProductDAO().getCategoriesByProductCode(code);
-                        product.setCategories(categories);
-
-                        products.add(product);
+                        code = resultSet.getInt("code");
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return products;
+        return code;
     }
 
     public void removeCategory(int code) {
