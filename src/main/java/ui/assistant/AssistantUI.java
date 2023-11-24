@@ -60,7 +60,7 @@ public class AssistantUI extends JFrame {
         bottomPanel.add(totalCostLabel);
 
         // Search Results Table
-        String[] searchColumnNames = {"Product ID", "Name", "Price", "Quantity"};
+        String[] searchColumnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
         Object[][] searchData = new Object[0][4];
         DefaultTableModel searchModel = new DefaultTableModel(searchData, searchColumnNames);
         searchResultsTable = new JTable(searchModel);
@@ -84,7 +84,7 @@ public class AssistantUI extends JFrame {
         bottomPanel.add(addToCartButton);
 
         // Cart Table
-        String[] cartColumnNames = {"Product ID", "Name", "Price", "Quantity"};
+        String[] cartColumnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
         Object[][] cartData = new Object[0][4];
         DefaultTableModel cartModel = new DefaultTableModel(cartData, cartColumnNames);
         cartTable = new JTable(cartModel);
@@ -110,10 +110,19 @@ public class AssistantUI extends JFrame {
     }
 
     private void searchProduct() {
-
-        //String[][] searchData = cart.searchItems();
-        //DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
-        //searchModel.setDataVector(searchData, new Object[]{"Product ID", "Name", "Description", "Quantity", "Price"});
+        if (searchField.getText().isEmpty()) {
+            updateResults();
+        }
+        else {
+            String searchText = searchField.getText();
+            String categoryName = categoryComboBox.getSelectedItem().toString();
+            List<Product> searchedProducts = cart.searchProducts(searchText, categoryName);
+            DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
+            searchModel.setRowCount(0);
+            for (Product p : searchedProducts) {
+                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice()});
+            }
+        }
     }
     public void updateResults() {
         String selectedCategory = categoryComboBox.getSelectedItem().toString();

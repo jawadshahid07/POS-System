@@ -84,5 +84,36 @@ public class ProductDAO {
     }
 
 
+    public List<Product> getProductsBySearchNameCategoryCode(String searchText, int categoryCode) {
+        List<Product> products = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String query = "SELECT * FROM products WHERE name LIKE ? AND categoryCode = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                // Use '%' as a wildcard to match any characters before and after the search text
+                preparedStatement.setString(1, "%" + searchText + "%");
+                preparedStatement.setInt(2, categoryCode);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        int code = resultSet.getInt("code");
+                        String name = resultSet.getString("name");
+                        String description = resultSet.getString("description");
+                        int stockQuantity = resultSet.getInt("stockQuantity");
+                        double price = resultSet.getDouble("price");
+
+                        Product product = new Product(name, description, stockQuantity, price, categoryCode);
+                        product.setCode(code);
+                        products.add(product);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+
 }
 
