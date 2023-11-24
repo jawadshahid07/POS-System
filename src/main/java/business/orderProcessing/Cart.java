@@ -20,6 +20,8 @@ public class Cart extends ItemContainer {
         ProductDAO productDAO = new ProductDAO();
         for (Item i : items) {
             Product product = productDAO.getProductById(i.getProduct().getCode());
+            System.out.println(product.getStockQuantity());
+            System.out.println(i.getQuantityOrdered());
             if (i.getQuantityOrdered() > product.getStockQuantity()) {
                 return null;
             }

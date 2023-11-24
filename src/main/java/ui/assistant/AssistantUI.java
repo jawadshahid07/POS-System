@@ -260,23 +260,12 @@ public class AssistantUI extends JFrame {
     }
     private void processOrder() {
         // Display the order processing dialog
-        OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, calculateTotalCost(), cart, salesAssistant);
+        OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, cart, salesAssistant);
     }
 
     private void updateTotalCost() {
-        double totalCost = calculateTotalCost();
+        double totalCost = cart.total();
         totalCostLabel.setText("Total Cost: $" + String.format("%.2f", totalCost));
-    }
-
-    private double calculateTotalCost() {
-        double totalCost = 0.0;
-
-        List<Item> items = cart.getItemsList();
-        for (Item i: items) {
-            totalCost += i.total();
-        }
-
-        return totalCost;
     }
 
     private List<Category> getCategories() {

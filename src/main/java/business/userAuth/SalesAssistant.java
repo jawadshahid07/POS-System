@@ -2,6 +2,7 @@ package business.userAuth;
 
 import business.orderProcessing.Order;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SalesAssistant extends Role {
@@ -9,6 +10,7 @@ public class SalesAssistant extends Role {
 
     public SalesAssistant() {
         super();
+        orders = new ArrayList<>();
     }
 
     public void processOrder() {

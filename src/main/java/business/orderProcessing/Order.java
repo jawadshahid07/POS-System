@@ -5,7 +5,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +47,7 @@ public class Order extends ItemContainer {
 
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                 // Invoice header
+                contentStream.beginText();  // Call beginText() before setting font and placing text
                 contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
                 contentStream.newLineAtOffset(100, 700);
                 contentStream.showText("Invoice");
@@ -71,10 +74,21 @@ public class Order extends ItemContainer {
 
                 // Total cost
                 contentStream.showText("Total Cost: $" + String.format("%.2f", total()));
+
+                contentStream.endText();  // Call endText() when you're done with text operations
             }
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            document.save(baos);
+            document.save("invoice.pdf");  // Save the PDF to a file
+
+            // Open the generated PDF in the default web browser
+            File file = new File("invoice.pdf");
+            Desktop desktop = Desktop.getDesktop();
+
+            if (desktop.isSupported(Desktop.Action.OPEN)) {
+                desktop.open(file);
+            } else {
+                System.out.println("Opening PDF is not supported on this platform.");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

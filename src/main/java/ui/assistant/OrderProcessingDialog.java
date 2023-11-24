@@ -18,8 +18,9 @@ public class OrderProcessingDialog extends JDialog {
 
     SalesAssistant salesAssistant;
     JTextField customerField;
+    JTextField enteredField;
 
-    public OrderProcessingDialog(AssistantUI parent, double totalCost, Cart cart, SalesAssistant salesAssistant) {
+    public OrderProcessingDialog(AssistantUI parent, Cart cart, SalesAssistant salesAssistant) {
         super(parent, "Order Processing", true);
         this.parent = parent;
         this.cart = cart;
@@ -29,9 +30,6 @@ public class OrderProcessingDialog extends JDialog {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Display total cost
-        JLabel totalCostLabel = new JLabel("Total Cost: $" + String.format("%.2f", totalCost), JLabel.CENTER);
-        mainPanel.add(totalCostLabel, BorderLayout.NORTH);
 
         // Display cart
         String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price", "Total Price"};
@@ -48,7 +46,7 @@ public class OrderProcessingDialog extends JDialog {
         }
 
         // Buttons panel
-        JPanel buttonsPanel = new JPanel(new GridLayout(2,2));
+        JPanel buttonsPanel = new JPanel(new GridLayout(4,2));
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
@@ -63,14 +61,25 @@ public class OrderProcessingDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 generateInvoice();
-                dispose(); // Close the dialog
             }
         });
+
+        // Display total cost
+        JLabel totalCostLabel = new JLabel("Total Cost: $" + String.format("%.2f", cart.total()), JLabel.CENTER);
+        JLabel empty = new JLabel();
+
+        //entered amount
+        JLabel enteredLabel = new JLabel("Enter Amount:");
+        enteredField = new JTextField(20);
 
         //customer section
         JLabel customerLabel = new JLabel("Customer Name:");
         customerField = new JTextField(20);
 
+        buttonsPanel.add(totalCostLabel);
+        buttonsPanel.add(empty);
+        buttonsPanel.add(enteredLabel);
+        buttonsPanel.add(enteredField);
         buttonsPanel.add(customerLabel);
         buttonsPanel.add(customerField);
         buttonsPanel.add(cancelButton);
@@ -84,6 +93,15 @@ public class OrderProcessingDialog extends JDialog {
     }
 
     private void generateInvoice() {
+        if (Integer.parseInt(enteredField.getText()) < cart.total()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Entered amount must not be less than total amount!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         if (customerField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
@@ -94,8 +112,10 @@ public class OrderProcessingDialog extends JDialog {
             return;
         }
         Order order = cart.generateOrder();
+        order.setCustomer(customerField.getText());
         if (order != null) {
             salesAssistant.addOrder(order);
+            salesAssistant.processOrder();
         }
         JOptionPane.showMessageDialog(
                 this,
@@ -104,6 +124,7 @@ public class OrderProcessingDialog extends JDialog {
                 JOptionPane.INFORMATION_MESSAGE
         );
         parent.clear();
+        dispose();
     }
 }
 
