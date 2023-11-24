@@ -79,6 +79,17 @@ public class Product {
             return productDAO.getProductsByCategoryCode(catCode);
         }
     }
+
+    public void setName(String productName) {
+        this.name = productName;
+    }
+
+    public void setDescription(String productDescription) {
+        this.description = productDescription;
+    }
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }
 
 

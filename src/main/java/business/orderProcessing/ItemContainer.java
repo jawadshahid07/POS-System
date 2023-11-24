@@ -32,4 +32,8 @@ public abstract class ItemContainer {
         }
         return grandTotal;
     }
+
+    public List<Item> getItemsList() {
+        return items;
+    }
 }

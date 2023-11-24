@@ -9,6 +9,9 @@ import java.util.List;
 
 public class Cart extends ItemContainer {
 
+    public Cart() {
+        super();
+    }
     public void clear() {
         items = new ArrayList<>();
     }

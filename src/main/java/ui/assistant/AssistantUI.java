@@ -1,6 +1,7 @@
 package ui.assistant;
 
 import business.orderProcessing.Cart;
+import business.orderProcessing.Item;
 import business.productCatalog.Category;
 import business.productCatalog.Product;
 import dao.CategoryDAO;
@@ -15,6 +16,7 @@ import java.util.List;
 public class AssistantUI extends JFrame {
 
     private JTextField searchField;
+    private JTextField quantityField;
     private JButton searchButton;
     private JTable searchResultsTable;
     private JTable cartTable;
@@ -73,6 +75,39 @@ public class AssistantUI extends JFrame {
         JLabel cartTableLabel = new JLabel("Cart:", JLabel.CENTER);
         topPanel.add(cartTableLabel);
 
+        // Quantity Panel
+        JPanel quantityPanel = new JPanel(new FlowLayout());
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JButton plusButton = new JButton("+");
+        JButton minusButton = new JButton("-");
+        quantityField = new JTextField("1", 5);
+        quantityField.setEditable(false);
+
+        quantityPanel.add(quantityLabel);
+        quantityPanel.add(minusButton);
+        quantityPanel.add(quantityField);
+        quantityPanel.add(plusButton);
+
+        minusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int quantity = Integer.parseInt(quantityField.getText());
+                if (quantity > 1) {
+                    quantity--;
+                    quantityField.setText(Integer.toString(quantity));
+                }
+            }
+        });
+
+        plusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int quantity = Integer.parseInt(quantityField.getText());
+                quantity++;
+                quantityField.setText(Integer.toString(quantity));
+            }
+        });
+
         // Add to Cart Button
         addToCartButton = new JButton("Add to Cart");
         addToCartButton.addActionListener(new ActionListener() {
@@ -81,10 +116,15 @@ public class AssistantUI extends JFrame {
                 addToCart();
             }
         });
-        bottomPanel.add(addToCartButton);
+
+        JPanel addToCartPanel = new JPanel();
+        addToCartPanel.add(quantityPanel);
+        addToCartPanel.add(addToCartButton);
+
+        bottomPanel.add(addToCartPanel);
 
         // Cart Table
-        String[] cartColumnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
+        String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price", "Total Price"};
         Object[][] cartData = new Object[0][4];
         DefaultTableModel cartModel = new DefaultTableModel(cartData, cartColumnNames);
         cartTable = new JTable(cartModel);
@@ -120,7 +160,7 @@ public class AssistantUI extends JFrame {
             DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
             searchModel.setRowCount(0);
             for (Product p : searchedProducts) {
-                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice()});
+                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getStockQuantity(), p.getPrice()});
             }
         }
     }
@@ -137,24 +177,63 @@ public class AssistantUI extends JFrame {
         }
     }
 
-    private void addToCart() {
-        // Implement logic to add the selected product to the cart
-        JOptionPane.showMessageDialog(
-                this,
-                "Product added to cart.",
-                "Add to Cart",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
-        // For demonstration, let's assume some data
-        Object[] productDetails = {"1", "Product A", "10.00", "1"};
+    private void displayCart() {
+        List<Item> items = cart.getItemsList();
         DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
-        cartModel.addRow(productDetails);
+        cartModel.setRowCount(0);
 
-        // Update total cost
-        updateTotalCost();
+        for (Item i : items) {
+            Object[] itemDetails = {i.getProduct().getCode(), i.getProduct().getName(), i.getProduct().getDescription(),  i.getQuantityOrdered(), i.getProduct().getPrice(), i.total()};
+            cartModel.addRow(itemDetails);
+        }
     }
 
+    private void addToCart() {
+        // Get the selected product details
+        int selectedRow = searchResultsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int productId = (int) searchResultsTable.getValueAt(selectedRow, 0);
+            String productName = (String) searchResultsTable.getValueAt(selectedRow, 1);
+            String productDescription = (String) searchResultsTable.getValueAt(selectedRow, 2);
+            double productPrice = (double) searchResultsTable.getValueAt(selectedRow, 4);
+            int quantity;
+
+            // Retrieve the quantity from the text field or use 1 as the default value
+            try {
+                quantity = Integer.parseInt(quantityField.getText());
+            } catch (NumberFormatException ex) {
+                quantity = 1;
+            }
+            Product product = new Product();
+            product.setCode(productId);
+            product.setName(productName);
+            product.setDescription(productDescription);
+            product.setPrice(productPrice);
+            Item item = new Item(product, quantity);
+            cart.add(item);
+
+            displayCart();
+
+            // Update total cost
+            updateTotalCost();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Product added to cart.",
+                    "Add to Cart",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            // Reset the quantity field
+            quantityField.setText("1");
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a product to add to the cart.",
+                    "Add to Cart Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
     private void processOrder() {
         // Implement logic to process the items in the cart and generate an invoice
         JOptionPane.showMessageDialog(
@@ -173,14 +252,11 @@ public class AssistantUI extends JFrame {
     }
 
     private void updateTotalCost() {
-        DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
-        int rowCount = cartModel.getRowCount();
         double totalCost = 0.0;
 
-        for (int i = 0; i < rowCount; i++) {
-            double price = Double.parseDouble(cartModel.getValueAt(i, 2).toString());
-            int quantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
-            totalCost += price * quantity;
+        List<Item> items = cart.getItemsList();
+        for (Item i: items) {
+            totalCost += i.total();
         }
 
         totalCostLabel.setText("Total Cost: $" + String.format("%.2f", totalCost));
