@@ -1,10 +1,16 @@
 package ui.assistant;
 
+import business.orderProcessing.Cart;
+import business.productCatalog.Category;
+import business.productCatalog.Product;
+import dao.CategoryDAO;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class AssistantUI extends JFrame {
 
@@ -15,6 +21,8 @@ public class AssistantUI extends JFrame {
     private JLabel totalCostLabel;
     private JButton addToCartButton;
     private JButton processOrderButton;
+    private Cart cart;
+    private JComboBox categoryComboBox;
 
     public AssistantUI() {
         setTitle("Assistant Interface");
@@ -28,7 +36,7 @@ public class AssistantUI extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Search Panel
-        JPanel searchPanel = new JPanel(new GridLayout(1,2));
+        JPanel searchPanel = new JPanel(new GridLayout(1,3));
         JLabel searchLabel = new JLabel("Search Product:");
         searchField = new JTextField(20);
         searchButton = new JButton("Search");
@@ -39,8 +47,10 @@ public class AssistantUI extends JFrame {
             }
         });
 
+        categoryComboBox = new JComboBox<>(getCategoryNames());
         searchPanel.add(searchLabel);
         searchPanel.add(searchField);
+        searchPanel.add(categoryComboBox);
         searchPanel.add(searchButton);
 
         bottomPanel.add(searchPanel);
@@ -94,21 +104,28 @@ public class AssistantUI extends JFrame {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
         add(mainPanel);
+        cart = new Cart();
+        updateResults();
         setVisible(true);
     }
 
     private void searchProduct() {
-        // Implement logic to search for products based on the entered text
-        // Update the searchResultsTable with search results
-        // For demonstration, let's assume some data
-        Object[][] searchData = {
-                {"1", "Product A", "10.00", "50"},
-                {"2", "Product B", "5.00", "80"},
-                {"3", "Product C", "8.50", "30"}
-                // Add more rows as needed
-        };
+
+        //String[][] searchData = cart.searchItems();
+        //DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
+        //searchModel.setDataVector(searchData, new Object[]{"Product ID", "Name", "Description", "Quantity", "Price"});
+    }
+    public void updateResults() {
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+        Product product = new Product();
+        List<Product> products = product.getProductsByCategory(selectedCategory);
+
         DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
-        searchModel.setDataVector(searchData, new Object[]{"Product ID", "Name", "Price", "Quantity"});
+        searchModel.setRowCount(0);
+
+        for (Product p : products) {
+            searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice()});
+        }
     }
 
     private void addToCart() {
@@ -158,5 +175,21 @@ public class AssistantUI extends JFrame {
         }
 
         totalCostLabel.setText("Total Cost: $" + String.format("%.2f", totalCost));
+    }
+
+    private List<Category> getCategories() {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        return categoryDAO.getAllCategories();
+    }
+
+    private String[] getCategoryNames() {
+        List<Category> categories = getCategories();
+        String[] categoryNames = new String[categories.size()];
+        int i = 0;
+        for (Category c : categories) {
+            categoryNames[i] = c.getName();
+            i++;
+        }
+        return categoryNames;
     }
 }

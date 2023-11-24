@@ -1,4 +1,16 @@
 package business.orderProcessing;
 
-public class Cart {
+import java.util.ArrayList;
+
+public class Cart extends ItemContainer {
+
+    public void clear() {
+        items = new ArrayList<>();
+    }
+
+    public void generateOrder() {
+
+    }
+
+    //public String[][] searchItems() {}
 }
