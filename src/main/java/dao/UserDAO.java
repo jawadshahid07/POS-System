@@ -1,17 +1,15 @@
 package dao;
 
-import business.Manager;
-import business.Role;
-import business.SalesAssistant;
-import business.User;
+import business.userAuth.Manager;
+import business.userAuth.Role;
+import business.userAuth.SalesAssistant;
+import business.userAuth.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserDAO {
     private static final String URL = "jdbc:mysql://localhost:3306/pos_system";

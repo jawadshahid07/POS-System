@@ -1,44 +1,69 @@
 package ui.manager.catalog;
 
+import business.productCatalog.Category;
+import business.productCatalog.Product;
+import dao.CategoryDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class AddProductUI extends JDialog {
 
     private JTextField nameField;
     private JTextField priceField;
     private JTextField quantityField;
+    private JTextField descriptionField;
+    private JComboBox<String> categoryComboBox; // Change to JComboBox
+    private ProductCatalogUI parent;
 
-    public AddProductUI(JFrame parent) {
+    public AddProductUI(ProductCatalogUI parent) {
         super(parent, "Add Product", true);
-        setSize(300, 200);
+        this.parent = parent;
+        setSize(400, 300);
         setLocationRelativeTo(parent);
 
-        JPanel panel = new JPanel(new GridLayout(4, 2));
+        JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(new JLabel("Name:"));
+        // Input fields
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2));
+        inputPanel.add(new JLabel("Name:"));
         nameField = new JTextField();
-        panel.add(nameField);
+        inputPanel.add(nameField);
 
-        panel.add(new JLabel("Price:"));
-        priceField = new JTextField();
-        panel.add(priceField);
+        inputPanel.add(new JLabel("Description:"));
+        descriptionField = new JTextField();
+        inputPanel.add(descriptionField);
 
-        panel.add(new JLabel("Quantity:"));
+        inputPanel.add(new JLabel("Stock Quantity:"));
         quantityField = new JTextField();
-        panel.add(quantityField);
+        inputPanel.add(quantityField);
 
+        inputPanel.add(new JLabel("Price:"));
+        priceField = new JTextField();
+        inputPanel.add(priceField);
+
+        // Category selection using JComboBox
+        inputPanel.add(new JLabel("Select Category:"));
+        categoryComboBox = new JComboBox<>();
+        inputPanel.add(categoryComboBox);
+
+        loadCategories();
+
+        panel.add(inputPanel, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle the add operation here
-                dispose(); // Close the dialog
+                addProduct();
             }
         });
-        panel.add(addButton);
+        buttonPanel.add(addButton);
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
@@ -47,9 +72,32 @@ public class AddProductUI extends JDialog {
                 dispose(); // Close the dialog without adding
             }
         });
-        panel.add(cancelButton);
+        buttonPanel.add(cancelButton);
+
+        panel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(panel);
     }
-}
 
+    private void loadCategories() {
+        Category c = new Category();
+        List<Category> allCategories = c.loadCategories();
+
+        for (Category category : allCategories) {
+            categoryComboBox.addItem(category.getName());
+        }
+    }
+
+    private void addProduct() {
+        String name = nameField.getText();
+        double price = Double.parseDouble(priceField.getText());
+        int quantity = Integer.parseInt(quantityField.getText());
+        String description = descriptionField.getText();
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+        Category c = new Category();
+        Product product = new Product(name, description, quantity, price, c.getCategoryCode(selectedCategory));
+        c.addProduct(product);
+        parent.updateTable();
+        dispose();
+    }
+}

@@ -1,4 +1,4 @@
-package business;
+package business.userAuth;
 
 public class SalesAssistant extends Role {
     private String orders;

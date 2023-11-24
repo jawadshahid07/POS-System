@@ -1,4 +1,4 @@
-package business;
+package business.userAuth;
 
 import dao.UserDAO;
 
