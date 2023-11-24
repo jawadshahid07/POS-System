@@ -80,8 +80,8 @@ public class AddProductUI extends JDialog {
     }
 
     private void loadCategories() {
-        CategoryDAO categoryDAO = new CategoryDAO();
-        List<Category> allCategories = categoryDAO.getAllCategories();
+        Category c = new Category();
+        List<Category> allCategories = c.loadCategories();
 
         for (Category category : allCategories) {
             categoryComboBox.addItem(category.getName());

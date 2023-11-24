@@ -27,6 +27,15 @@ public class Product {
 
     }
 
+    public Product(int code, String name, String description, int stockQuantity, double price, int categoryCode) {
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        this.stockQuantity = stockQuantity;
+        this.price = price;
+        this.categoryCode = categoryCode;
+    }
+
     public int getCode() {
         return code;
     }

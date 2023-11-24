@@ -121,7 +121,6 @@ public class ProductCatalogUI extends JFrame {
     }
 
     public void updateTable() {
-        // Update the table based on the selected category
         String selectedCategory = categoryComboBox.getSelectedItem().toString();
         Product product = new Product();
         List<Product> products = product.getProductsByCategory(selectedCategory);
@@ -173,8 +172,7 @@ public class ProductCatalogUI extends JFrame {
     private void openEditDialog() {
         EditProductUI editDialog = new EditProductUI(this, Objects.requireNonNull(getProductDetails()));
         editDialog.setVisible(true);
-        // Handle the result of the edit operation here
-        updateTable(); // Update the table after editing a product
+        updateTable();
     }
 
     private Object[] getProductDetails() {
@@ -185,7 +183,9 @@ public class ProductCatalogUI extends JFrame {
                     productTable.getValueAt(selectedRow, 0),
                     productTable.getValueAt(selectedRow, 1),
                     productTable.getValueAt(selectedRow, 2),
-                    productTable.getValueAt(selectedRow, 3)
+                    productTable.getValueAt(selectedRow, 3),
+                    productTable.getValueAt(selectedRow, 4),
+                    categoryComboBox.getSelectedItem()
             };
         }
         return null;

@@ -78,9 +78,21 @@ public class Category {
         productDAO.removeProduct(productID);
     }
 
+    public void editProduct(Product product) {
+        ProductDAO productDAO = new ProductDAO();
+        productDAO.editProduct(product);
+    }
+
     public int getCategoryCode(String categoryName) {
         CategoryDAO categoryDAO = new CategoryDAO();
         return categoryDAO.getCategoryCodeByName(categoryName);
+    }
+
+    public List<Category> loadCategories() {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> allCategories = categoryDAO.getAllCategories();
+
+        return allCategories;
     }
 }
 
