@@ -160,7 +160,7 @@ public class AssistantUI extends JFrame {
             DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
             searchModel.setRowCount(0);
             for (Product p : searchedProducts) {
-                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getStockQuantity(), p.getPrice()});
+                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice()});
             }
         }
     }
@@ -183,7 +183,7 @@ public class AssistantUI extends JFrame {
         cartModel.setRowCount(0);
 
         for (Item i : items) {
-            Object[] itemDetails = {i.getProduct().getCode(), i.getProduct().getName(), i.getProduct().getDescription(),  i.getQuantityOrdered(), i.getProduct().getPrice(), i.total()};
+            Object[] itemDetails = {i.getProduct().getCode(), i.getProduct().getName(), i.getQuantityOrdered(), i.getProduct().getPrice(), i.total()};
             cartModel.addRow(itemDetails);
         }
     }
