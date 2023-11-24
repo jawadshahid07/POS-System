@@ -73,9 +73,9 @@ public class Category {
         ProductDAO productDAO = new ProductDAO();
         productDAO.addProduct(product);
     }
-    public void removeProduct(){
+    public void removeProduct(int productID){
         ProductDAO productDAO = new ProductDAO();
-        //productDAO.removeProduct(product);
+        productDAO.removeProduct(productID);
     }
 
     public int getCategoryCode(String categoryName) {

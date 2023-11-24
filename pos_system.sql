@@ -16,15 +16,6 @@ INSERT INTO users (name, username, password, role) VALUES ('Admin', 'admin', 'ad
 -- insert staff user
 INSERT INTO users (name, username, password, role) VALUES ('Staff', 'staff', 'staff', 'SalesAssistant');
 
--- for maintaining products in database
-CREATE TABLE products (
-    code INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    description VARCHAR(255),
-    stockQuantity INT,
-    price DECIMAL(10, 2)
-);
-
 -- for maintaining categories in database
 CREATE TABLE categories (
     code INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,11 +23,13 @@ CREATE TABLE categories (
     description VARCHAR(255)
 );
 
--- intermediate table for many-to-many relationship: maintains all categories of all products.
-CREATE TABLE product_category (
-    productCode INT,
+-- for maintaining products in database
+CREATE TABLE products (
+    code INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    description VARCHAR(255),
+    stockQuantity INT,
+    price DECIMAL(10, 2),
     categoryCode INT,
-    PRIMARY KEY (productCode, categoryCode),
-    FOREIGN KEY (productCode) REFERENCES products(code),
-    FOREIGN KEY (categoryCode) REFERENCES categories(code)
+    FOREIGN KEY (categoryCode) REFERENCES categories(code) ON UPDATE CASCADE ON DELETE CASCADE
 );

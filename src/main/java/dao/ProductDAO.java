@@ -28,6 +28,18 @@ public class ProductDAO {
             e.printStackTrace();
         }
     }
+
+    public void removeProduct(int code) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String query = "DELETE FROM products WHERE code = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, code);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public List<Product> getProductsByCategoryCode(int categoryCode) {
         List<Product> products = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
@@ -53,5 +65,7 @@ public class ProductDAO {
         }
         return products;
     }
+
+
 }
 

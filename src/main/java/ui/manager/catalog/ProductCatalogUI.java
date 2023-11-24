@@ -154,7 +154,8 @@ public class ProductCatalogUI extends JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 DefaultTableModel model = (DefaultTableModel) productTable.getModel();
                 int productId = (int) model.getValueAt(selectedRow, 0);
-                //ProductDAO.deleteProduct(productId);
+                Category c = new Category();
+                c.removeProduct(productId);
 
                 // Update the table after deletion
                 updateTable();
