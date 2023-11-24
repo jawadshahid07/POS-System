@@ -23,6 +23,7 @@ public class AssistantUI extends JFrame {
     private JLabel totalCostLabel;
     private JButton addToCartButton;
     private JButton processOrderButton;
+    private JButton clearButton;
     private Cart cart;
     private JComboBox categoryComboBox;
 
@@ -56,6 +57,7 @@ public class AssistantUI extends JFrame {
         searchPanel.add(searchButton);
 
         bottomPanel.add(searchPanel);
+
 
         // Total Cost Label
         totalCostLabel = new JLabel("Total Cost: $0.00", JLabel.CENTER);
@@ -132,6 +134,17 @@ public class AssistantUI extends JFrame {
         middlePanel.add(cartScrollPane);
         mainPanel.add(middlePanel, BorderLayout.CENTER);
 
+        //clear button
+        clearButton = new JButton("Clear");
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clear();
+            }
+        });
+        JPanel processClearPanel = new JPanel();
+        processClearPanel.add(clearButton);
+
         // Process Order Button
         processOrderButton = new JButton("Process Order");
         processOrderButton.addActionListener(new ActionListener() {
@@ -140,13 +153,21 @@ public class AssistantUI extends JFrame {
                 processOrder();
             }
         });
-        bottomPanel.add(processOrderButton);
+        processClearPanel.add(processOrderButton);
+        bottomPanel.add(processClearPanel);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
         add(mainPanel);
         cart = new Cart();
         updateResults();
         setVisible(true);
+    }
+
+    public void clear() {
+        DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
+        cartModel.setRowCount(0);
+        totalCostLabel.setText("Total Cost: $0.00");
+        cart.clear();
     }
 
     private void searchProduct() {

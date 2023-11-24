@@ -8,8 +8,11 @@ import java.awt.event.ActionListener;
 
 public class OrderProcessingDialog extends JDialog {
 
-    public OrderProcessingDialog(JFrame parent, double totalCost, DefaultTableModel cartModel) {
+    AssistantUI parent;
+
+    public OrderProcessingDialog(AssistantUI parent, double totalCost, DefaultTableModel cartModel) {
         super(parent, "Order Processing", true);
+        this.parent = parent;
         setSize(400, 300);
         setLocationRelativeTo(parent);
 
@@ -62,6 +65,7 @@ public class OrderProcessingDialog extends JDialog {
                 "Invoice Generated",
                 JOptionPane.INFORMATION_MESSAGE
         );
+        parent.clear();
     }
 }
 
