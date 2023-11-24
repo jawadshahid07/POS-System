@@ -1,5 +1,7 @@
 package ui.manager;
 
+import ui.manager.catalog.ProductCatalogUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,7 +30,7 @@ public class ManagerMainMenuUI extends JFrame {
         manageCatalogButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Open the dialog for managing the catalog
+                ProductCatalogUI productCatalogUI = new ProductCatalogUI();
             }
         });
 
