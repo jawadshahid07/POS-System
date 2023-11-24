@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Cart extends ItemContainer {
 
+    private Order order;
     public Cart() {
         super();
     }
@@ -17,7 +18,7 @@ public class Cart extends ItemContainer {
     }
 
     public void generateOrder() {
-
+        order = new Order(items);
     }
 
     public List<Product> searchProducts(String searchText, String categoryName) {

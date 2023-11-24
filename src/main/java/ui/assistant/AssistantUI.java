@@ -235,23 +235,16 @@ public class AssistantUI extends JFrame {
         }
     }
     private void processOrder() {
-        // Implement logic to process the items in the cart and generate an invoice
-        JOptionPane.showMessageDialog(
-                this,
-                "Order processed successfully. Invoice generated.",
-                "Process Order",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
-        // Clear the cart
-        DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
-        cartModel.setRowCount(0);
-
-        // Reset total cost
-        updateTotalCost();
+        // Display the order processing dialog
+        OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, calculateTotalCost(), (DefaultTableModel) cartTable.getModel());
     }
 
     private void updateTotalCost() {
+        double totalCost = calculateTotalCost();
+        totalCostLabel.setText("Total Cost: $" + String.format("%.2f", totalCost));
+    }
+
+    private double calculateTotalCost() {
         double totalCost = 0.0;
 
         List<Item> items = cart.getItemsList();
@@ -259,7 +252,7 @@ public class AssistantUI extends JFrame {
             totalCost += i.total();
         }
 
-        totalCostLabel.setText("Total Cost: $" + String.format("%.2f", totalCost));
+        return totalCost;
     }
 
     private List<Category> getCategories() {
