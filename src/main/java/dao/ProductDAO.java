@@ -143,5 +143,31 @@ public class ProductDAO {
         return products;
     }
 
+    public Product getProductById(int code) {
+        Product product = new Product();
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String query = "SELECT * FROM products WHERE code = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, code);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("name");
+                        String description = resultSet.getString("description");
+                        int stockQuantity = resultSet.getInt("stockQuantity");
+                        double price = resultSet.getDouble("price");
+                        int categoryCode = resultSet.getInt("categoryCode");
+
+                        product = new Product(name, description, stockQuantity, price, categoryCode);
+                        product.setCode(code);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return product;
+    }
 }
 

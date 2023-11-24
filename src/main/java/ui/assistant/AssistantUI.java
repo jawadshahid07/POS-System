@@ -4,6 +4,7 @@ import business.orderProcessing.Cart;
 import business.orderProcessing.Item;
 import business.productCatalog.Category;
 import business.productCatalog.Product;
+import business.userAuth.SalesAssistant;
 import dao.CategoryDAO;
 
 import javax.swing.*;
@@ -26,8 +27,10 @@ public class AssistantUI extends JFrame {
     private JButton clearButton;
     private Cart cart;
     private JComboBox categoryComboBox;
+    private SalesAssistant salesAssistant;
 
     public AssistantUI() {
+        salesAssistant = new SalesAssistant();
         setTitle("Assistant Interface");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -257,7 +260,7 @@ public class AssistantUI extends JFrame {
     }
     private void processOrder() {
         // Display the order processing dialog
-        OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, calculateTotalCost(), (DefaultTableModel) cartTable.getModel());
+        OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, calculateTotalCost(), cart, salesAssistant);
     }
 
     private void updateTotalCost() {

@@ -1,5 +1,10 @@
 package ui.assistant;
 
+import business.orderProcessing.Cart;
+import business.orderProcessing.Item;
+import business.orderProcessing.Order;
+import business.userAuth.SalesAssistant;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -9,10 +14,16 @@ import java.awt.event.ActionListener;
 public class OrderProcessingDialog extends JDialog {
 
     AssistantUI parent;
+    Cart cart;
 
-    public OrderProcessingDialog(AssistantUI parent, double totalCost, DefaultTableModel cartModel) {
+    SalesAssistant salesAssistant;
+    JTextField customerField;
+
+    public OrderProcessingDialog(AssistantUI parent, double totalCost, Cart cart, SalesAssistant salesAssistant) {
         super(parent, "Order Processing", true);
         this.parent = parent;
+        this.cart = cart;
+        this.salesAssistant = salesAssistant;
         setSize(400, 300);
         setLocationRelativeTo(parent);
 
@@ -23,12 +34,21 @@ public class OrderProcessingDialog extends JDialog {
         mainPanel.add(totalCostLabel, BorderLayout.NORTH);
 
         // Display cart
+        String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price", "Total Price"};
+        Object[][] cartData = new Object[0][4];
+        DefaultTableModel cartModel = new DefaultTableModel(cartData, cartColumnNames);
         JTable cartTable = new JTable(cartModel);
         JScrollPane cartScrollPane = new JScrollPane(cartTable);
+
         mainPanel.add(cartScrollPane, BorderLayout.CENTER);
 
+        for (Item i : cart.getItemsList()) {
+            Object[] itemDetails = {i.getProduct().getCode(), i.getProduct().getName(), i.getQuantityOrdered(), i.getProduct().getPrice(), i.total()};
+            cartModel.addRow(itemDetails);
+        }
+
         // Buttons panel
-        JPanel buttonsPanel = new JPanel(new FlowLayout());
+        JPanel buttonsPanel = new JPanel(new GridLayout(2,2));
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
@@ -47,6 +67,12 @@ public class OrderProcessingDialog extends JDialog {
             }
         });
 
+        //customer section
+        JLabel customerLabel = new JLabel("Customer Name:");
+        customerField = new JTextField(20);
+
+        buttonsPanel.add(customerLabel);
+        buttonsPanel.add(customerField);
         buttonsPanel.add(cancelButton);
         buttonsPanel.add(confirmButton);
 
@@ -58,7 +84,19 @@ public class OrderProcessingDialog extends JDialog {
     }
 
     private void generateInvoice() {
-        // Add logic to generate the invoice
+        if (customerField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter customer name.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        Order order = cart.generateOrder();
+        if (order != null) {
+            salesAssistant.addOrder(order);
+        }
         JOptionPane.showMessageDialog(
                 this,
                 "Invoice generated successfully.",

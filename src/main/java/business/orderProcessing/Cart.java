@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Cart extends ItemContainer {
 
-    private Order order;
     public Cart() {
         super();
     }
@@ -17,8 +16,15 @@ public class Cart extends ItemContainer {
         items = new ArrayList<>();
     }
 
-    public void generateOrder() {
-        order = new Order(items);
+    public Order generateOrder() {
+        ProductDAO productDAO = new ProductDAO();
+        for (Item i : items) {
+            Product product = productDAO.getProductById(i.getProduct().getCode());
+            if (i.getQuantityOrdered() > product.getStockQuantity()) {
+                return null;
+            }
+        }
+        return new Order(items);
     }
 
     public List<Product> searchProducts(String searchText, String categoryName) {
