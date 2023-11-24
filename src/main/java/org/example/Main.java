@@ -10,7 +10,7 @@ public class Main {
             public void run() {
                 LoginScreenUI loginScreenUI = new LoginScreenUI();
                 loginScreenUI.setVisible(true);
-            }
+            } //test
         });
     }
 }
