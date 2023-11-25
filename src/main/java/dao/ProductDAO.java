@@ -1,5 +1,6 @@
 package dao;
 
+import business.orderProcessing.Order;
 import business.productCatalog.Category;
 import business.productCatalog.Product;
 

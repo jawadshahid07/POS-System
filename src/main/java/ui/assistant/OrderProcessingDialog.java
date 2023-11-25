@@ -132,6 +132,7 @@ public class OrderProcessingDialog extends JDialog {
                 JOptionPane.INFORMATION_MESSAGE
         );
         parent.clear();
+        parent.updateResults();
         dispose();
     }
 }

@@ -54,11 +54,22 @@ public class Product {
     public int getStockQuantity() {
         return stockQuantity;
     }
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
 
     public double getPrice() {
         return price;
     }
     public int getCategoryCode() {return categoryCode;}
+    public void setCategoryCode(int categoryCode) {
+        this.categoryCode = categoryCode;
+    }
+    public int getCategoryCodeById(int code) {
+        ProductDAO productDAO = new ProductDAO();
+        Product product = productDAO.getProductById(code);
+        return product.getCategoryCode();
+    }
 
     public void updateStock(int quantity) {
         this.stockQuantity += quantity;

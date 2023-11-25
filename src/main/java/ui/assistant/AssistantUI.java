@@ -219,6 +219,7 @@ public class AssistantUI extends JFrame {
             int productId = (int) searchResultsTable.getValueAt(selectedRow, 0);
             String productName = (String) searchResultsTable.getValueAt(selectedRow, 1);
             String productDescription = (String) searchResultsTable.getValueAt(selectedRow, 2);
+            int productQuantity = (int) searchResultsTable.getValueAt(selectedRow, 3);
             double productPrice = (double) searchResultsTable.getValueAt(selectedRow, 4);
             int quantity;
 
@@ -232,7 +233,9 @@ public class AssistantUI extends JFrame {
             product.setCode(productId);
             product.setName(productName);
             product.setDescription(productDescription);
+            product.setStockQuantity(productQuantity);
             product.setPrice(productPrice);
+            product.setCategoryCode(product.getCategoryCodeById(productId));
             Item item = new Item(product, quantity);
             cart.add(item);
 
