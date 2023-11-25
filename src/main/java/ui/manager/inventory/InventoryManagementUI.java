@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryManagementUI extends JFrame {
@@ -140,7 +141,6 @@ public class InventoryManagementUI extends JFrame {
             Object[] productDetails = getProductDetails(selectedRow);
             RestockItemsUI restockDialog = new RestockItemsUI(this, productDetails);
             restockDialog.setVisible(true);
-            // You may update the table after restocking
         } else {
             JOptionPane.showMessageDialog(
                     this,
@@ -152,14 +152,31 @@ public class InventoryManagementUI extends JFrame {
     }
 
     private void showExpiredItems() {
-        ExpiredItemsUI showExpiredItemsUI = new ExpiredItemsUI(this, getExpiredItems());
+        ArrayList<Product> expiredItems = filterExpiredProducts();
+        ExpiredItemsUI showExpiredItemsUI = new ExpiredItemsUI(this, getExpiredItems(), expiredItems);
         showExpiredItemsUI.setVisible(true);
-        // You may update the table after showing expired items
     }
 
     private String getExpiredItems() {
-        String expiredItems = "";
-        return expiredItems;
+        StringBuilder expiredItems = new StringBuilder();
+        List<Product> expiredProducts = filterExpiredProducts();
+
+        for (Product p : expiredProducts) {
+            expiredItems.append("Product Name: ").append(p.getName()).append("\n");
+            expiredItems.append("Expiration Date: ").append(p.getExpirationDate()).append("\n");
+            expiredItems.append("------------------------------\n");
+        }
+
+        return expiredItems.toString();
+    }
+
+    private ArrayList<Product> filterExpiredProducts() {
+        ArrayList<Product> expiredProducts = new ArrayList<>();
+        Product product = new Product();
+        List<Product> products = product.getProductsByCategory("All Categories");
+
+
+        return expiredProducts;
     }
 
     private Object[] getProductDetails(int selectedRow) {

@@ -125,6 +125,13 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public void deleteProducts(List<Product> products) {
+        ProductDAO productDAO = new ProductDAO();
+        for (Product product : products) {
+            productDAO.removeProduct(product.getCode());
+        }
+    }
 }
 
 

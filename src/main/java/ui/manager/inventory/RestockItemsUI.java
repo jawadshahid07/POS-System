@@ -1,5 +1,8 @@
 package ui.manager.inventory;
 
+import business.productCatalog.Category;
+import business.productCatalog.Product;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,13 +11,17 @@ import java.awt.event.ActionListener;
 public class RestockItemsUI extends JDialog {
 
     private JTextField quantityField;
+    private Object[] productDetails;
+    private InventoryManagementUI parent;
 
-    public RestockItemsUI(JFrame parent, Object[] productDetails) {
+    public RestockItemsUI(InventoryManagementUI parent, Object[] productDetails) {
         super(parent, "Restock Product", true);
+        this.productDetails = productDetails;
+        this.parent = parent;
         setSize(300, 150);
         setLocationRelativeTo(parent);
 
-        JPanel panel = new JPanel(new GridLayout(2, 2));
+        JPanel panel = new JPanel(new GridLayout(3, 2));
 
         panel.add(new JLabel("Product Name:"));
         panel.add(new JLabel(productDetails[1].toString()));
@@ -27,8 +34,7 @@ public class RestockItemsUI extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Implement logic to restock the product
-                dispose(); // Close the dialog
+                restockItems();
             }
         });
         panel.add(saveButton);
@@ -43,6 +49,37 @@ public class RestockItemsUI extends JDialog {
         panel.add(cancelButton);
 
         add(panel);
+    }
+
+    private void restockItems() {
+        if (quantityField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter quantity to restock",
+                    "Alert Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        int quantity = Integer.parseInt(quantityField.getText());
+        if (quantity < 1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Quantity cannot be less than 1",
+                    "Alert Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        Category c = new Category();
+        Product product = new Product();
+        product = product.getProductById(Integer.parseInt(productDetails[0].toString()));
+        product.setStockQuantity(product.getStockQuantity() + quantity);
+        c.editProduct(product);
+        parent.updateTable();
+        dispose();
     }
 }
 
