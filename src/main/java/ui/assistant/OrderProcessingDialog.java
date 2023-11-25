@@ -93,7 +93,7 @@ public class OrderProcessingDialog extends JDialog {
     }
 
     private void generateInvoice() {
-        if (Integer.parseInt(enteredField.getText()) < cart.total()) {
+        if (Integer.parseInt(enteredField.getText()) < cart.total() || enteredField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
                     "Entered amount must not be less than total amount!",
@@ -113,10 +113,18 @@ public class OrderProcessingDialog extends JDialog {
         }
         Order order = cart.generateOrder();
         order.setCustomer(customerField.getText());
-        if (order != null) {
-            salesAssistant.addOrder(order);
-            salesAssistant.processOrder();
+        order.setEnteredAmount(Double.parseDouble(enteredField.getText()));
+        if (order == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Cannot order more items than available in stock",
+                    "Unavailable Stock",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
         }
+        salesAssistant.addOrder(order);
+        salesAssistant.processOrder();
         JOptionPane.showMessageDialog(
                 this,
                 "Invoice generated successfully.",
