@@ -193,14 +193,4 @@ public class InventoryManagementUI extends JFrame {
                 model.getValueAt(selectedRow, 5)
         };
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                InventoryManagementUI inventoryScreen = new InventoryManagementUI();
-                inventoryScreen.setVisible(true);
-            }
-        });
-    }
 }
