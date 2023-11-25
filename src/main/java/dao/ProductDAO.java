@@ -46,14 +46,15 @@ public class ProductDAO {
 
     public void editProduct(Product product) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String query = "UPDATE products SET name = ?, description = ?, stockQuantity = ?, price = ?, categoryCode = ? WHERE code = ?";
+            String query = "UPDATE products SET name = ?, description = ?, stockQuantity = ?, price = ?, categoryCode = ?, alertQuantity = ? WHERE code = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, product.getName());
                 preparedStatement.setString(2, product.getDescription());
                 preparedStatement.setInt(3, product.getStockQuantity());
                 preparedStatement.setDouble(4, product.getPrice());
                 preparedStatement.setInt(5, product.getCategoryCode());
-                preparedStatement.setInt(6, product.getCode());
+                preparedStatement.setInt(6, product.getAlertQuantity());
+                preparedStatement.setInt(7, product.getCode());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {

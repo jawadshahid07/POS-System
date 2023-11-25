@@ -24,10 +24,11 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.price = price;
         this.categoryCode = categoryCode;
+        this.alertQuantity = -1;
     }
 
     public Product() {
-
+        this.alertQuantity = -1;
     }
 
     public Product(int code, String name, String description, int stockQuantity, double price, int categoryCode) {
@@ -37,6 +38,7 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.price = price;
         this.categoryCode = categoryCode;
+        this.alertQuantity = -1;
     }
 
     public int getAlertQuantity() {
@@ -86,6 +88,11 @@ public class Product {
         ProductDAO productDAO = new ProductDAO();
         Product product = productDAO.getProductById(code);
         return product.getCategoryCode();
+    }
+
+    public Product getProductById(int code) {
+        ProductDAO productDAO = new ProductDAO();
+        return productDAO.getProductById(code);
     }
 
     public void updateStock(int quantity) {

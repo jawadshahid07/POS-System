@@ -82,6 +82,7 @@ public class InventoryManagementUI extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+        updateTable();
     }
 
     private List<Category> getCategories() {
@@ -123,7 +124,6 @@ public class InventoryManagementUI extends JFrame {
             Object[] productDetails = getProductDetails(selectedRow);
             SetAlertUI setAlertDialog = new SetAlertUI(this, productDetails);
             setAlertDialog.setVisible(true);
-            // You may update the table after saving the alert
         } else {
             JOptionPane.showMessageDialog(
                     this,
