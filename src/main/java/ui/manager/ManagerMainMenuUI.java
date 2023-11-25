@@ -1,6 +1,7 @@
 package ui.manager;
 
 import ui.manager.catalog.ProductCatalogUI;
+import ui.manager.inventory.InventoryManagementUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +39,8 @@ public class ManagerMainMenuUI extends JFrame {
         manageInventoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Open the dialog for managing product inventory
+                InventoryManagementUI inventoryScreen = new InventoryManagementUI();
+                inventoryScreen.setVisible(true);
             }
         });
 
