@@ -97,6 +97,7 @@ public class ProductCatalogUI extends JFrame {
 
         add(mainPanel);
         updateTable(); // Initially update the table with all products
+        setVisible(true);
     }
 
     private List<Category> getCategories() {
@@ -193,14 +194,5 @@ public class ProductCatalogUI extends JFrame {
 
     private void openManageCategoriesDialog() {
         new CategoryManagementDialog(this);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ProductCatalogUI().setVisible(true);
-            }
-        });
     }
 }

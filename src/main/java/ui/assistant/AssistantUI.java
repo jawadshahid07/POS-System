@@ -1,22 +1,36 @@
 package ui.assistant;
 
+import business.orderProcessing.Cart;
+import business.orderProcessing.Item;
+import business.productCatalog.Category;
+import business.productCatalog.Product;
+import business.userAuth.SalesAssistant;
+import dao.CategoryDAO;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class AssistantUI extends JFrame {
 
     private JTextField searchField;
+    private JTextField quantityField;
     private JButton searchButton;
     private JTable searchResultsTable;
     private JTable cartTable;
     private JLabel totalCostLabel;
     private JButton addToCartButton;
     private JButton processOrderButton;
+    private JButton clearButton;
+    private Cart cart;
+    private JComboBox categoryComboBox;
+    private SalesAssistant salesAssistant;
 
     public AssistantUI() {
+        salesAssistant = new SalesAssistant();
         setTitle("Assistant Interface");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,7 +42,7 @@ public class AssistantUI extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Search Panel
-        JPanel searchPanel = new JPanel(new GridLayout(1,2));
+        JPanel searchPanel = new JPanel(new GridLayout(1,3));
         JLabel searchLabel = new JLabel("Search Product:");
         searchField = new JTextField(20);
         searchButton = new JButton("Search");
@@ -39,18 +53,21 @@ public class AssistantUI extends JFrame {
             }
         });
 
+        categoryComboBox = new JComboBox<>(getCategoryNames());
         searchPanel.add(searchLabel);
         searchPanel.add(searchField);
+        searchPanel.add(categoryComboBox);
         searchPanel.add(searchButton);
 
         bottomPanel.add(searchPanel);
+
 
         // Total Cost Label
         totalCostLabel = new JLabel("Total Cost: $0.00", JLabel.CENTER);
         bottomPanel.add(totalCostLabel);
 
         // Search Results Table
-        String[] searchColumnNames = {"Product ID", "Name", "Price", "Quantity"};
+        String[] searchColumnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
         Object[][] searchData = new Object[0][4];
         DefaultTableModel searchModel = new DefaultTableModel(searchData, searchColumnNames);
         searchResultsTable = new JTable(searchModel);
@@ -63,6 +80,39 @@ public class AssistantUI extends JFrame {
         JLabel cartTableLabel = new JLabel("Cart:", JLabel.CENTER);
         topPanel.add(cartTableLabel);
 
+        // Quantity Panel
+        JPanel quantityPanel = new JPanel(new FlowLayout());
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JButton plusButton = new JButton("+");
+        JButton minusButton = new JButton("-");
+        quantityField = new JTextField("1", 5);
+        quantityField.setEditable(false);
+
+        quantityPanel.add(quantityLabel);
+        quantityPanel.add(minusButton);
+        quantityPanel.add(quantityField);
+        quantityPanel.add(plusButton);
+
+        minusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int quantity = Integer.parseInt(quantityField.getText());
+                if (quantity > 1) {
+                    quantity--;
+                    quantityField.setText(Integer.toString(quantity));
+                }
+            }
+        });
+
+        plusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int quantity = Integer.parseInt(quantityField.getText());
+                quantity++;
+                quantityField.setText(Integer.toString(quantity));
+            }
+        });
+
         // Add to Cart Button
         addToCartButton = new JButton("Add to Cart");
         addToCartButton.addActionListener(new ActionListener() {
@@ -71,16 +121,32 @@ public class AssistantUI extends JFrame {
                 addToCart();
             }
         });
-        bottomPanel.add(addToCartButton);
+
+        JPanel addToCartPanel = new JPanel();
+        addToCartPanel.add(quantityPanel);
+        addToCartPanel.add(addToCartButton);
+
+        bottomPanel.add(addToCartPanel);
 
         // Cart Table
-        String[] cartColumnNames = {"Product ID", "Name", "Price", "Quantity"};
+        String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price", "Total Price"};
         Object[][] cartData = new Object[0][4];
         DefaultTableModel cartModel = new DefaultTableModel(cartData, cartColumnNames);
         cartTable = new JTable(cartModel);
         JScrollPane cartScrollPane = new JScrollPane(cartTable);
         middlePanel.add(cartScrollPane);
         mainPanel.add(middlePanel, BorderLayout.CENTER);
+
+        //clear button
+        clearButton = new JButton("Clear");
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clear();
+            }
+        });
+        JPanel processClearPanel = new JPanel();
+        processClearPanel.add(clearButton);
 
         // Process Order Button
         processOrderButton = new JButton("Process Order");
@@ -90,73 +156,132 @@ public class AssistantUI extends JFrame {
                 processOrder();
             }
         });
-        bottomPanel.add(processOrderButton);
+        processClearPanel.add(processOrderButton);
+        bottomPanel.add(processClearPanel);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
         add(mainPanel);
+        cart = new Cart();
+        updateResults();
         setVisible(true);
     }
 
-    private void searchProduct() {
-        // Implement logic to search for products based on the entered text
-        // Update the searchResultsTable with search results
-        // For demonstration, let's assume some data
-        Object[][] searchData = {
-                {"1", "Product A", "10.00", "50"},
-                {"2", "Product B", "5.00", "80"},
-                {"3", "Product C", "8.50", "30"}
-                // Add more rows as needed
-        };
-        DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
-        searchModel.setDataVector(searchData, new Object[]{"Product ID", "Name", "Price", "Quantity"});
-    }
-
-    private void addToCart() {
-        // Implement logic to add the selected product to the cart
-        JOptionPane.showMessageDialog(
-                this,
-                "Product added to cart.",
-                "Add to Cart",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
-        // For demonstration, let's assume some data
-        Object[] productDetails = {"1", "Product A", "10.00", "1"};
+    public void clear() {
         DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
-        cartModel.addRow(productDetails);
-
-        // Update total cost
-        updateTotalCost();
+        cartModel.setRowCount(0);
+        totalCostLabel.setText("Total Cost: $0.00");
+        cart.clear();
     }
 
-    private void processOrder() {
-        // Implement logic to process the items in the cart and generate an invoice
-        JOptionPane.showMessageDialog(
-                this,
-                "Order processed successfully. Invoice generated.",
-                "Process Order",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+    private void searchProduct() {
+        if (searchField.getText().isEmpty()) {
+            updateResults();
+        }
+        else {
+            String searchText = searchField.getText();
+            String categoryName = categoryComboBox.getSelectedItem().toString();
+            List<Product> searchedProducts = cart.searchProducts(searchText, categoryName);
+            DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
+            searchModel.setRowCount(0);
+            for (Product p : searchedProducts) {
+                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice()});
+            }
+        }
+    }
+    public void updateResults() {
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+        Product product = new Product();
+        List<Product> products = product.getProductsByCategory(selectedCategory);
 
-        // Clear the cart
+        DefaultTableModel searchModel = (DefaultTableModel) searchResultsTable.getModel();
+        searchModel.setRowCount(0);
+
+        for (Product p : products) {
+            searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice()});
+        }
+    }
+
+    private void displayCart() {
+        List<Item> items = cart.getItemsList();
         DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
         cartModel.setRowCount(0);
 
-        // Reset total cost
-        updateTotalCost();
+        for (Item i : items) {
+            Object[] itemDetails = {i.getProduct().getCode(), i.getProduct().getName(), i.getQuantityOrdered(), i.getProduct().getPrice(), i.total()};
+            cartModel.addRow(itemDetails);
+        }
+    }
+
+    private void addToCart() {
+        // Get the selected product details
+        int selectedRow = searchResultsTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int productId = (int) searchResultsTable.getValueAt(selectedRow, 0);
+            String productName = (String) searchResultsTable.getValueAt(selectedRow, 1);
+            String productDescription = (String) searchResultsTable.getValueAt(selectedRow, 2);
+            double productPrice = (double) searchResultsTable.getValueAt(selectedRow, 4);
+            int quantity;
+
+            // Retrieve the quantity from the text field or use 1 as the default value
+            try {
+                quantity = Integer.parseInt(quantityField.getText());
+            } catch (NumberFormatException ex) {
+                quantity = 1;
+            }
+            Product product = new Product();
+            product.setCode(productId);
+            product.setName(productName);
+            product.setDescription(productDescription);
+            product.setPrice(productPrice);
+            Item item = new Item(product, quantity);
+            cart.add(item);
+
+            displayCart();
+
+            // Update total cost
+            updateTotalCost();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Product added to cart.",
+                    "Add to Cart",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            // Reset the quantity field
+            quantityField.setText("1");
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a product to add to the cart.",
+                    "Add to Cart Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+    private void processOrder() {
+        // Display the order processing dialog
+        OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, cart, salesAssistant);
     }
 
     private void updateTotalCost() {
-        DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
-        int rowCount = cartModel.getRowCount();
-        double totalCost = 0.0;
-
-        for (int i = 0; i < rowCount; i++) {
-            double price = Double.parseDouble(cartModel.getValueAt(i, 2).toString());
-            int quantity = Integer.parseInt(cartModel.getValueAt(i, 3).toString());
-            totalCost += price * quantity;
-        }
-
+        double totalCost = cart.total();
         totalCostLabel.setText("Total Cost: $" + String.format("%.2f", totalCost));
+    }
+
+    private List<Category> getCategories() {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        return categoryDAO.getAllCategories();
+    }
+
+    private String[] getCategoryNames() {
+        List<Category> categories = getCategories();
+        String[] categoryNames = new String[categories.size() + 1];
+        categoryNames[0] = "All Categories";
+        int i = 1;
+        for (Category c : categories) {
+            categoryNames[i] = c.getName();
+            i++;
+        }
+        return categoryNames;
     }
 }

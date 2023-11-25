@@ -1,4 +1,6 @@
-package business.productCatalog;
+package business.orderProcessing;
+
+import business.productCatalog.Product;
 
 public class Item {
     private Product product;
@@ -25,6 +27,10 @@ public class Item {
 
     public double total() {
         return quantityOrdered * price;
+    }
+
+    public void updateQuantity(int qty) {
+        quantityOrdered = qty;
     }
 }
 

@@ -93,9 +93,11 @@ public class LoginScreenUI extends JFrame {
         else if (status == 0 && user.getRole().permissions().equals("SalesAssistant")) {
             // Authentication successful, sales assistant credentials
             AssistantUI assistantUI = new AssistantUI();
+            setVisible(false);
         } else if (status == 0 && user.getRole().permissions().equals("Manager")) {
             // Authentication successful, manager credentials
             ManagerMainMenuUI managerMainMenuUI = new ManagerMainMenuUI();
+            setVisible(false);
         }
 
         // Clear fields for security

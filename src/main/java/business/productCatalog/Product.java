@@ -69,10 +69,26 @@ public class Product {
     }
 
     public List<Product> getProductsByCategory(String categoryName) {
-        CategoryDAO categoryDAO = new CategoryDAO();
-        int catCode = categoryDAO.getCategoryCodeByName(categoryName);
         ProductDAO productDAO = new ProductDAO();
-        return productDAO.getProductsByCategoryCode(catCode);
+        if (categoryName.equals("All Categories")) {
+            return productDAO.getAllProducts();
+        }
+        else {
+            CategoryDAO categoryDAO = new CategoryDAO();
+            int catCode = categoryDAO.getCategoryCodeByName(categoryName);
+            return productDAO.getProductsByCategoryCode(catCode);
+        }
+    }
+
+    public void setName(String productName) {
+        this.name = productName;
+    }
+
+    public void setDescription(String productDescription) {
+        this.description = productDescription;
+    }
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
 
