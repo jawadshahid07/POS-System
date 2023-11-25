@@ -47,6 +47,7 @@ public class ExpiredItemsUI extends JDialog {
                             "Delete Expired Items",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+                    parent.updateTable();
                     dispose();
                 }
             }

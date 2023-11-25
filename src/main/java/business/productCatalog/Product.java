@@ -3,9 +3,9 @@ package business.productCatalog;
 import dao.CategoryDAO;
 import dao.ProductDAO;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Product {
     private int code;
@@ -131,6 +131,46 @@ public class Product {
         for (Product product : products) {
             productDAO.removeProduct(product.getCode());
         }
+    }
+
+    public ArrayList<Product> filterExpiredProducts() {
+        ArrayList<Product> expiredProducts = new ArrayList<>();
+        List<Product> products = getProductsByCategory("All Categories");
+
+        // Get the current date
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.setTime(new Date());
+
+        // Iterate through products and filter expired ones
+        for (Product p : products) {
+            String expirationDateString = p.getExpirationDate();
+
+            // Parse the expiration date string
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date expirationDate = sdf.parse(expirationDateString);
+
+                // Compare the expiration date with the current date
+                Calendar expirationCalendar = Calendar.getInstance();
+                expirationCalendar.setTime(expirationDate);
+
+                // Compare year, month, and day
+                if (expirationCalendar.get(Calendar.YEAR) < currentDate.get(Calendar.YEAR) ||
+                        (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
+                                expirationCalendar.get(Calendar.MONTH) < currentDate.get(Calendar.MONTH)) ||
+                        (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
+                                expirationCalendar.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
+                                expirationCalendar.get(Calendar.DAY_OF_MONTH) < currentDate.get(Calendar.DAY_OF_MONTH))) {
+                    // Product is expired
+                    expiredProducts.add(p);
+                }
+            } catch (ParseException e) {
+                // Handle parsing exception if needed
+                e.printStackTrace();
+            }
+        }
+
+        return expiredProducts;
     }
 }
 

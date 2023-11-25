@@ -9,7 +9,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class InventoryManagementUI extends JFrame {
@@ -152,6 +157,7 @@ public class InventoryManagementUI extends JFrame {
     }
 
     private void showExpiredItems() {
+
         ArrayList<Product> expiredItems = filterExpiredProducts();
         ExpiredItemsUI showExpiredItemsUI = new ExpiredItemsUI(this, getExpiredItems(), expiredItems);
         showExpiredItemsUI.setVisible(true);
@@ -171,13 +177,10 @@ public class InventoryManagementUI extends JFrame {
     }
 
     private ArrayList<Product> filterExpiredProducts() {
-        ArrayList<Product> expiredProducts = new ArrayList<>();
         Product product = new Product();
-        List<Product> products = product.getProductsByCategory("All Categories");
-
-
-        return expiredProducts;
+        return product.filterExpiredProducts();
     }
+
 
     private Object[] getProductDetails(int selectedRow) {
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
