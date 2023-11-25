@@ -44,9 +44,16 @@ public class Category {
     }
 
 
-    public void addCategory(Category category) {
+    public boolean addCategory(Category category) {
         CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> categories = categoryDAO.getAllCategories();
+        for (Category c: categories) {
+            if (c.getName().equals(category.getName())) {
+                return false;
+            }
+        }
         categoryDAO.addCategory(category);
+        return true;
     }
 
     public void removeCategory(Category category) {

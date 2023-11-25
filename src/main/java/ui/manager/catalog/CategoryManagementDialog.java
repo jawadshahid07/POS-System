@@ -100,7 +100,15 @@ public class CategoryManagementDialog extends JDialog {
 
             if (!categoryName.isEmpty()) {
                 Category newCategory = new Category(categoryName, categoryDescription);
-                newCategory.addCategory(newCategory);
+                if (!newCategory.addCategory(newCategory)) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Cannot create duplicate categories!",
+                            "Existing Category",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                };
                 loadCategories();
                 parent.updateCategories();
             }
