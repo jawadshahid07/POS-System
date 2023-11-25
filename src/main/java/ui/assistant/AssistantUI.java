@@ -217,9 +217,6 @@ public class AssistantUI extends JFrame {
         int selectedRow = searchResultsTable.getSelectedRow();
         if (selectedRow != -1) {
             int productId = (int) searchResultsTable.getValueAt(selectedRow, 0);
-            String productName = (String) searchResultsTable.getValueAt(selectedRow, 1);
-            String productDescription = (String) searchResultsTable.getValueAt(selectedRow, 2);
-            double productPrice = (double) searchResultsTable.getValueAt(selectedRow, 4);
             int quantity;
 
             // Retrieve the quantity from the text field or use 1 as the default value
@@ -229,10 +226,7 @@ public class AssistantUI extends JFrame {
                 quantity = 1;
             }
             Product product = new Product();
-            product.setCode(productId);
-            product.setName(productName);
-            product.setDescription(productDescription);
-            product.setPrice(productPrice);
+            product = product.getProductById(productId);
             Item item = new Item(product, quantity);
             cart.add(item);
 

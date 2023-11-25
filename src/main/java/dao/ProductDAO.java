@@ -1,5 +1,6 @@
 package dao;
 
+import business.orderProcessing.Order;
 import business.productCatalog.Category;
 import business.productCatalog.Product;
 
@@ -15,13 +16,15 @@ public class ProductDAO {
     private static final String JDBC_PASSWORD = "1234";
     public void addProduct(Product product) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String query = "INSERT INTO products (name, description, stockQuantity, price, categoryCode) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO products (name, description, stockQuantity, price, categoryCode, alertQuantity, dateTracked) VALUES (?, ?, ?, ?, ?, ? , ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, product.getName());
                 preparedStatement.setString(2, product.getDescription());
                 preparedStatement.setInt(3, product.getStockQuantity());
                 preparedStatement.setDouble(4, product.getPrice());
                 preparedStatement.setInt(5, product.getCategoryCode());
+                preparedStatement.setInt(6, product.getAlertQuantity());
+                preparedStatement.setString(7, product.getExpirationDate());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -43,14 +46,15 @@ public class ProductDAO {
 
     public void editProduct(Product product) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String query = "UPDATE products SET name = ?, description = ?, stockQuantity = ?, price = ?, categoryCode = ? WHERE code = ?";
+            String query = "UPDATE products SET name = ?, description = ?, stockQuantity = ?, price = ?, categoryCode = ?, alertQuantity = ? WHERE code = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, product.getName());
                 preparedStatement.setString(2, product.getDescription());
                 preparedStatement.setInt(3, product.getStockQuantity());
                 preparedStatement.setDouble(4, product.getPrice());
                 preparedStatement.setInt(5, product.getCategoryCode());
-                preparedStatement.setInt(6, product.getCode());
+                preparedStatement.setInt(6, product.getAlertQuantity());
+                preparedStatement.setInt(7, product.getCode());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -70,9 +74,13 @@ public class ProductDAO {
                         String description = resultSet.getString("description");
                         int stockQuantity = resultSet.getInt("stockQuantity");
                         double price = resultSet.getDouble("price");
+                        int alertQuantity = resultSet.getInt("alertQuantity");
+                        String dateTrackedString = resultSet.getString("dateTracked");
 
                         Product product = new Product(name, description, stockQuantity, price, categoryCode);
                         product.setCode(code);
+                        product.setAlertQuantity(alertQuantity);
+                        product.setExpirationDate(dateTrackedString);
                         products.add(product);
                     }
                 }
@@ -101,9 +109,13 @@ public class ProductDAO {
                         String description = resultSet.getString("description");
                         int stockQuantity = resultSet.getInt("stockQuantity");
                         double price = resultSet.getDouble("price");
+                        int alertQuantity = resultSet.getInt("alertQuantity");
+                        String dateTrackedString = resultSet.getString("dateTracked");
 
                         Product product = new Product(name, description, stockQuantity, price, categoryCode);
                         product.setCode(code);
+                        product.setAlertQuantity(alertQuantity);
+                        product.setExpirationDate(dateTrackedString);
                         products.add(product);
                     }
                 }
@@ -129,9 +141,13 @@ public class ProductDAO {
                         int stockQuantity = resultSet.getInt("stockQuantity");
                         double price = resultSet.getDouble("price");
                         int categoryCode = resultSet.getInt("categoryCode");
+                        int alertQuantity = resultSet.getInt("alertQuantity");
+                        String dateTrackedString = resultSet.getString("dateTracked");
 
                         Product product = new Product(name, description, stockQuantity, price, categoryCode);
                         product.setCode(code);
+                        product.setAlertQuantity(alertQuantity);
+                        product.setExpirationDate(dateTrackedString);
                         products.add(product);
                     }
                 }
@@ -157,8 +173,12 @@ public class ProductDAO {
                         int stockQuantity = resultSet.getInt("stockQuantity");
                         double price = resultSet.getDouble("price");
                         int categoryCode = resultSet.getInt("categoryCode");
+                        int alertQuantity = resultSet.getInt("alertQuantity");
+                        String dateTrackedString = resultSet.getString("dateTracked");
 
                         product = new Product(name, description, stockQuantity, price, categoryCode);
+                        product.setAlertQuantity(alertQuantity);
+                        product.setExpirationDate(dateTrackedString);
                         product.setCode(code);
                     }
                 }

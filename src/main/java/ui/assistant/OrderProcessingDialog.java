@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class OrderProcessingDialog extends JDialog {
 
@@ -124,14 +125,28 @@ public class OrderProcessingDialog extends JDialog {
             return;
         }
         salesAssistant.addOrder(order);
-        salesAssistant.processOrder();
+        List<String> restockNames = salesAssistant.processOrder();
         JOptionPane.showMessageDialog(
                 this,
                 "Invoice generated successfully.",
                 "Invoice Generated",
                 JOptionPane.INFORMATION_MESSAGE
         );
+
+
+        if (!restockNames.isEmpty()) {
+
+            for (String restock: restockNames) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please restock the following item: " + restock,
+                        "Restock Items Alert",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        }
         parent.clear();
+        parent.updateResults();
         dispose();
     }
 }

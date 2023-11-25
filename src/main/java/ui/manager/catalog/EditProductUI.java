@@ -18,9 +18,11 @@ public class EditProductUI extends JDialog {
     private JTextField descriptionField;
     private JComboBox categoryComboBox;
     private ProductCatalogUI parent;
+    private Object[] productDetails;
 
     public EditProductUI(ProductCatalogUI parent, Object[] productDetails) {
         super(parent, "Edit Product", true);
+        this.productDetails = productDetails;
         setSize(300, 200);
         setLocationRelativeTo(parent);
 
@@ -52,16 +54,7 @@ public class EditProductUI extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
-                double price = Double.parseDouble(priceField.getText());
-                int quantity = Integer.parseInt(quantityField.getText());
-                String description = descriptionField.getText();
-                String selectedCategory = categoryComboBox.getSelectedItem().toString();
-                Category c = new Category();
-                Product product = new Product(Integer.parseInt(productDetails[0].toString()), name, description, quantity, price, c.getCategoryCode(selectedCategory));
-                c.editProduct(product);
-                parent.updateTable();
-                dispose();
+                editProduct();
             }
         });
         panel.add(saveButton);
@@ -85,6 +78,28 @@ public class EditProductUI extends JDialog {
         for (Category category : allCategories) {
             categoryComboBox.addItem(category.getName());
         }
+    }
+
+    private void editProduct() {
+        String name = nameField.getText();
+        double price = Double.parseDouble(priceField.getText());
+        int quantity = Integer.parseInt(quantityField.getText());
+        if (quantity < 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Quantity cannot be less than 0",
+                    "Alert Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        String description = descriptionField.getText();
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+        Category c = new Category();
+        Product product = new Product(Integer.parseInt(productDetails[0].toString()), name, description, quantity, price, c.getCategoryCode(selectedCategory));
+        c.editProduct(product);
+        parent.updateTable();
+        dispose();
     }
 }
 

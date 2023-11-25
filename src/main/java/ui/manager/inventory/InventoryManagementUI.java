@@ -1,10 +1,21 @@
 package ui.manager.inventory;
 
+import business.productCatalog.Category;
+import business.productCatalog.Product;
+import dao.CategoryDAO;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class InventoryManagementUI extends JFrame {
 
@@ -23,7 +34,7 @@ public class InventoryManagementUI extends JFrame {
         // Create a panel for the category selection
         JPanel categoryPanel = new JPanel();
         JLabel categoryLabel = new JLabel("Select Category:");
-        categoryComboBox = new JComboBox<>(getCategories());
+        categoryComboBox = new JComboBox<>(getCategoryNames());
         categoryComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -37,8 +48,8 @@ public class InventoryManagementUI extends JFrame {
         mainPanel.add(categoryPanel, BorderLayout.NORTH);
 
         // Create a table to display the product catalog
-        String[] columnNames = {"Product ID", "Name", "Price", "Quantity", "Expiration Date", "Alert Quantity"};
-        Object[][] data = new Object[0][6];
+        String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price", "Expiration Date", "Alert Quantity"};
+        Object[][] data = new Object[0][7];
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         productTable = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(productTable);
@@ -77,24 +88,40 @@ public class InventoryManagementUI extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+        updateTable();
     }
 
-    private String[] getCategories() {
-        // Return your list of categories
-        return new String[]{"Category 1", "Category 2", "Category 3"};
+    private List<Category> getCategories() {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        return categoryDAO.getAllCategories();
     }
+    private String[] getCategoryNames() {
+        List<Category> categories = getCategories();
+        String[] categoryNames = new String[categories.size() + 1];
+        categoryNames[0] = "All Categories";
+        int i = 1;
+        for (Category c : categories) {
+            categoryNames[i] = c.getName();
+            i++;
+        }
+        return categoryNames;
+    }
+    public void updateTable() {
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+        Product product = new Product();
+        List<Product> products = product.getProductsByCategory(selectedCategory);
 
-    private void updateTable() {
-        // Implement logic to update the table based on the selected category
-        // For demonstration purposes, let's assume you have some data
-        Object[][] data = {
-                {"1", "Product 1", "10.00", "50", "2023-12-31", "100"},
-                {"2", "Product 2", "5.00", "80", "2023-11-30", "150"},
-                {"3", "Product 3", "8.50", "30", "2024-01-15", "80"}
-                // Add more rows as needed
-        };
-        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
-        model.setDataVector(data, new Object[]{"Product ID", "Name", "Price", "Quantity", "Expiration Date", "Alert Quantity"});
+        DefaultTableModel searchModel = (DefaultTableModel) productTable.getModel();
+        searchModel.setRowCount(0);
+
+        for (Product p : products) {
+            if (p.getAlertQuantity() == -1) {
+                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice(), p.getExpirationDate(), "Not Set"});
+            }
+            else {
+                searchModel.addRow(new Object[]{p.getCode(), p.getName(), p.getDescription(), p.getStockQuantity(), p.getPrice(), p.getExpirationDate(), p.getAlertQuantity()});
+            }
+        }
     }
 
     private void setLowStockAlert() {
@@ -103,7 +130,6 @@ public class InventoryManagementUI extends JFrame {
             Object[] productDetails = getProductDetails(selectedRow);
             SetAlertUI setAlertDialog = new SetAlertUI(this, productDetails);
             setAlertDialog.setVisible(true);
-            // You may update the table after saving the alert
         } else {
             JOptionPane.showMessageDialog(
                     this,
@@ -120,7 +146,6 @@ public class InventoryManagementUI extends JFrame {
             Object[] productDetails = getProductDetails(selectedRow);
             RestockItemsUI restockDialog = new RestockItemsUI(this, productDetails);
             restockDialog.setVisible(true);
-            // You may update the table after restocking
         } else {
             JOptionPane.showMessageDialog(
                     this,
@@ -132,15 +157,30 @@ public class InventoryManagementUI extends JFrame {
     }
 
     private void showExpiredItems() {
-        ExpiredItemsUI showExpiredItemsUI = new ExpiredItemsUI(this, getExpiredItems());
+
+        ArrayList<Product> expiredItems = filterExpiredProducts();
+        ExpiredItemsUI showExpiredItemsUI = new ExpiredItemsUI(this, getExpiredItems(), expiredItems);
         showExpiredItemsUI.setVisible(true);
-        // You may update the table after showing expired items
     }
 
     private String getExpiredItems() {
-        String expiredItems = "";
-        return expiredItems;
+        StringBuilder expiredItems = new StringBuilder();
+        List<Product> expiredProducts = filterExpiredProducts();
+
+        for (Product p : expiredProducts) {
+            expiredItems.append("Product Name: ").append(p.getName()).append("\n");
+            expiredItems.append("Expiration Date: ").append(p.getExpirationDate()).append("\n");
+            expiredItems.append("------------------------------\n");
+        }
+
+        return expiredItems.toString();
     }
+
+    private ArrayList<Product> filterExpiredProducts() {
+        Product product = new Product();
+        return product.filterExpiredProducts();
+    }
+
 
     private Object[] getProductDetails(int selectedRow) {
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();

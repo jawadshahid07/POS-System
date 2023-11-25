@@ -1,15 +1,19 @@
 package ui.manager.inventory;
 
+import business.productCatalog.Product;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ExpiredItemsUI extends JDialog {
 
     private JTextArea expiredTextArea;
+    private InventoryManagementUI parent;
 
-    public ExpiredItemsUI(JFrame parent, String expiredItems) {
+    public ExpiredItemsUI(InventoryManagementUI parent, String expiredItems, ArrayList<Product> expiredProducts) {
         super(parent, "Show Expired Items", true);
         setSize(400, 300);
         setLocationRelativeTo(parent);
@@ -35,16 +39,17 @@ public class ExpiredItemsUI extends JDialog {
                 );
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    // Implement logic to delete expired items from the database
-                    // You may update the table after deletion
+                    deleteExpiredItemsFromDatabase(expiredProducts);
+
                     JOptionPane.showMessageDialog(
                             parent,
                             "Expired items have been deleted.",
                             "Delete Expired Items",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+                    parent.updateTable();
+                    dispose();
                 }
-                dispose(); // Close the dialog
             }
         });
 
@@ -63,5 +68,10 @@ public class ExpiredItemsUI extends JDialog {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+    }
+
+    private void deleteExpiredItemsFromDatabase(ArrayList<Product> expiredItems) {
+        Product product = new Product();
+        product.deleteProducts(expiredItems);
     }
 }
