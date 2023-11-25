@@ -96,7 +96,15 @@ public class AddProductUI extends JDialog {
         String selectedCategory = categoryComboBox.getSelectedItem().toString();
         Category c = new Category();
         Product product = new Product(name, description, quantity, price, c.getCategoryCode(selectedCategory));
-        c.addProduct(product);
+        if(!c.addProduct(product)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Cannot create duplicate products!",
+                    "Existing Product",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        };
         parent.updateTable();
         dispose();
     }
