@@ -26,6 +26,10 @@ public class Order extends ItemContainer {
         this.timestamp = dateFormat.format(new Date());
     }
 
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public void setCustomer(String customer) {
         this.customer = customer;
     }

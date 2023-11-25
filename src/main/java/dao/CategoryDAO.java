@@ -33,8 +33,6 @@ public class CategoryDAO {
 
                         Category category = new Category(name, description);
                         category.setCode(code);
-                        //Set<Product> products = getProductsByCategoryCode(code);
-                        //category.setProducts(products);
 
                         categories.add(category);
                     }
