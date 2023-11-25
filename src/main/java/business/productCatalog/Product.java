@@ -14,6 +14,9 @@ public class Product {
     private int stockQuantity;
     private double price;
     private int categoryCode;
+    private int alertQuantity;
+    private String expirationDate;
+
 
     public Product(String name, String description, int stockQuantity, double price, int categoryCode) {
         this.name = name;
@@ -34,6 +37,20 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.price = price;
         this.categoryCode = categoryCode;
+    }
+
+    public int getAlertQuantity() {
+        return alertQuantity;
+    }
+
+    public void setAlertQuantity(int alertQuantity) {
+        this.alertQuantity = alertQuantity;
+    }
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public int getCode() {

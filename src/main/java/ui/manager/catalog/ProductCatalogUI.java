@@ -106,8 +106,9 @@ public class ProductCatalogUI extends JFrame {
     }
 
     private String[] getCategoryNames() {
-        String[] categoryNames = new String[categories.size()];
-        int i = 0;
+        String[] categoryNames = new String[categories.size() + 1];
+        categoryNames[0] = "All Categories";
+        int i = 1;
         for (Category c : categories) {
             categoryNames[i] = c.getName();
             i++;
