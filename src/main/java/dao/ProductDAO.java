@@ -189,5 +189,34 @@ public class ProductDAO {
 
         return product;
     }
+
+    public Product getProductByName(String productName) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String productQuery = "SELECT * FROM products WHERE name = ?";
+            try (PreparedStatement productStatement = connection.prepareStatement(productQuery)) {
+                productStatement.setString(1, productName);
+                try (ResultSet productResultSet = productStatement.executeQuery()) {
+                    if (productResultSet.next()) {
+                        int code = productResultSet.getInt("code");
+                        String name = productResultSet.getString("name");
+                        String description = productResultSet.getString("description");
+                        int stockQuantity = productResultSet.getInt("stockQuantity");
+                        double price = productResultSet.getDouble("price");
+                        int categoryCode = productResultSet.getInt("categoryCode");
+
+                        Product product = new Product(name, description, stockQuantity, price, categoryCode);
+                        product.setCode(code);
+                        return product;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            // Handle the exception (log, throw, or any custom handling)
+            e.printStackTrace(); // Print the stack trace for demonstration, replace with proper handling
+        }
+
+        return null;
+    }
+
 }
 

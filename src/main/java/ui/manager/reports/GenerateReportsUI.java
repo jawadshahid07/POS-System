@@ -1,5 +1,8 @@
 package ui.manager.reports;
 
+import business.reporting.InventoryReport;
+import business.reporting.SalesReport;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -66,16 +69,20 @@ public class GenerateReportsUI extends JFrame {
                 "Sales Report",
                 JOptionPane.INFORMATION_MESSAGE
         );
+        SalesReport salesReport = new SalesReport();
+        salesReport.setReportType(selectedOption);
+        salesReport.display();
     }
 
     private void generateInventoryReport() {
-        // Implement logic to generate inventory report
         JOptionPane.showMessageDialog(
                 this,
                 "Generating Inventory Report.",
                 "Inventory Report",
                 JOptionPane.INFORMATION_MESSAGE
         );
+        InventoryReport inventoryReport = new InventoryReport();
+        inventoryReport.display();
     }
 
     public static void main(String[] args) {

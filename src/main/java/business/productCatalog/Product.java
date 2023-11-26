@@ -3,6 +3,7 @@ package business.productCatalog;
 import dao.CategoryDAO;
 import dao.ProductDAO;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -93,6 +94,15 @@ public class Product {
     public Product getProductById(int code) {
         ProductDAO productDAO = new ProductDAO();
         return productDAO.getProductById(code);
+    }
+
+    public Product getProductByName(String productName) {
+        ProductDAO productDAO = new ProductDAO();
+        try {
+            return productDAO.getProductByName(productName);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void updateStock(int quantity) {

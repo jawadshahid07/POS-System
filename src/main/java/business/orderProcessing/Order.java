@@ -26,6 +26,14 @@ public class Order extends ItemContainer {
         this.timestamp = dateFormat.format(new Date());
     }
 
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getTimestamp() {
+        return this.timestamp;
+    }
+
     public void setCustomer(String customer) {
         this.customer = customer;
     }
@@ -175,12 +183,6 @@ public class Order extends ItemContainer {
                 contentStream.showText("Balance: $" + String.format("%.2f", change));
                 contentStream.endText();
 
-
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.TIMES_ITALIC, 12);
-                contentStream.newLineAtOffset(250, 100);
-                contentStream.showText("Thank You For Shopping!");
-                contentStream.endText();
                 contentStream.close();
                 document.save("Receipt.pdf");
             } catch (IOException e) {
