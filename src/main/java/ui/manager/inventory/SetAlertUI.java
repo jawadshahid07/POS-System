@@ -79,7 +79,7 @@ public class SetAlertUI extends JDialog {
         product.setAlertQuantity(quantity);
         c.editProduct(product);
         parent.updateTable();
-        dispose(); // Close the dialog
+        dispose();
     }
 }
 

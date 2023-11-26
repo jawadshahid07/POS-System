@@ -45,7 +45,7 @@ public class InventoryManagementUI extends JFrame {
         categoryPanel.add(categoryComboBox);
 
         mainPanel.add(categoryPanel, BorderLayout.NORTH);
-        String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price", "Expiration Date", "Alert Quantity"};
+        String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price ($)", "Expiration Date", "Alert Quantity"};
         Object[][] data = new Object[0][7];
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         productTable = new JTable(model);

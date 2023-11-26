@@ -34,7 +34,7 @@ public class AssistantUI extends JFrame {
     public AssistantUI() {
         salesAssistant = new SalesAssistant();
         setTitle("Assistant Interface");
-        setSize(800, 600);
+        setSize(820, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         JPanel topPanel = new JPanel(new GridLayout(1,2));
@@ -65,7 +65,7 @@ public class AssistantUI extends JFrame {
         totalCostLabel = new JLabel("Total Cost: $0.00", JLabel.CENTER);
         bottomPanel.add(totalCostLabel);
 
-        String[] searchColumnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
+        String[] searchColumnNames = {"Product ID", "Name", "Description", "Quantity", "Price ($)"};
         Object[][] searchData = new Object[0][4];
         DefaultTableModel searchModel = new DefaultTableModel(searchData, searchColumnNames);
         searchResultsTable = new JTable(searchModel);
@@ -122,7 +122,7 @@ public class AssistantUI extends JFrame {
 
         bottomPanel.add(addToCartPanel);
 
-        String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price", "Total Price"};
+        String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price ($)", "Total Price ($)"};
         Object[][] cartData = new Object[0][4];
         DefaultTableModel cartModel = new DefaultTableModel(cartData, cartColumnNames);
         cartTable = new JTable(cartModel);

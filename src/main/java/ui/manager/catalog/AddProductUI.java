@@ -37,7 +37,6 @@ public class AddProductUI extends JDialog {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        // Input fields
         JPanel inputPanel = new JPanel(new GridLayout(8, 2));
         inputPanel.add(new JLabel("Name:"));
         nameField = new JTextField();
@@ -51,7 +50,7 @@ public class AddProductUI extends JDialog {
         quantityField = new JTextField();
         inputPanel.add(quantityField);
 
-        inputPanel.add(new JLabel("Price:"));
+        inputPanel.add(new JLabel("Price($):"));
         priceField = new JTextField();
         inputPanel.add(priceField);
 
@@ -90,7 +89,7 @@ public class AddProductUI extends JDialog {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose(); // Close the dialog without adding
+                dispose();
             }
         });
         buttonPanel.add(cancelButton);
@@ -101,7 +100,6 @@ public class AddProductUI extends JDialog {
     }
 
     private Integer[] getYears() {
-        // You can customize this method to provide the desired range of years
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         Integer[] years = new Integer[10];
         for (int i = 0; i < 10; i++) {
@@ -111,12 +109,10 @@ public class AddProductUI extends JDialog {
     }
 
     private String[] getMonths() {
-        // You can customize this method to provide the names or numbers of months
         return new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     }
 
     private Integer[] getDays() {
-        // You can customize this method to provide the range of days
         Integer[] days = new Integer[31];
         for (int i = 0; i < 31; i++) {
             days[i] = i + 1;
@@ -135,16 +131,70 @@ public class AddProductUI extends JDialog {
 
     private void addProduct() {
         String name = nameField.getText();
+        if (priceField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter a price",
+                    "Price Field Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         double price = Double.parseDouble(priceField.getText());
+        if (quantityField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter quantity",
+                    "Quantity Field Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         int quantity = Integer.parseInt(quantityField.getText());
         String description = descriptionField.getText();
         String selectedCategory = categoryComboBox.getSelectedItem().toString();
+
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter name",
+                    "Name Field Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        if (price < 1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter price greater than 0",
+                    "Invalid Price",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        if (quantity < 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Quantity cannot be negative",
+                    "Invalid Quantity",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        if (description.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter description",
+                    "Description Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
 
         int year = (int) yearComboBox.getSelectedItem();
         String month = (String) monthComboBox.getSelectedItem();
         int day = (int) dayComboBox.getSelectedItem();
 
-        // Create a Date object using SimpleDateFormat
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM-dd");
         String dateString = String.format("%04d-%02d-%02d", year, getMonthNumber(month), day);
 

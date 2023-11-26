@@ -40,7 +40,7 @@ public class EditProductUI extends JDialog {
         quantityField = new JTextField(productDetails[3].toString());
         panel.add(quantityField);
 
-        panel.add(new JLabel("Price:"));
+        panel.add(new JLabel("Price($):"));
         priceField = new JTextField(productDetails[4].toString());
         panel.add(priceField);
 
@@ -82,18 +82,63 @@ public class EditProductUI extends JDialog {
 
     private void editProduct() {
         String name = nameField.getText();
+        if (priceField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter a price",
+                    "Price Field Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         double price = Double.parseDouble(priceField.getText());
+        if (quantityField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter quantity",
+                    "Quantity Field Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         int quantity = Integer.parseInt(quantityField.getText());
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter name",
+                    "Name Field Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        if (price < 1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter price greater than 0",
+                    "Invalid Price",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         if (quantity < 0) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Quantity cannot be less than 0",
-                    "Alert Error",
+                    "Quantity cannot be negative",
+                    "Invalid Quantity",
                     JOptionPane.ERROR_MESSAGE
             );
             return;
         }
         String description = descriptionField.getText();
+        if (description.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter description",
+                    "Description Blank",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         String selectedCategory = categoryComboBox.getSelectedItem().toString();
         Category c = new Category();
         Product product = new Product(Integer.parseInt(productDetails[0].toString()), name, description, quantity, price, c.getCategoryCode(selectedCategory));

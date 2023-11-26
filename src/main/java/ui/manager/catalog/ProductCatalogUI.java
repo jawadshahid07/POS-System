@@ -45,7 +45,7 @@ public class ProductCatalogUI extends JFrame {
 
         mainPanel.add(categoryPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
+        String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price($)"};
         DefaultTableModel model = new DefaultTableModel(null, columnNames);
         productTable = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(productTable);

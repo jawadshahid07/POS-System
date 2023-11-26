@@ -98,7 +98,7 @@ public class CategoryManagementDialog extends JDialog {
             String categoryName = nameField.getText().trim();
             String categoryDescription = descriptionField.getText().trim();
 
-            if (!categoryName.isEmpty()) {
+            if (!categoryName.isEmpty() && !categoryDescription.isEmpty()) {
                 Category newCategory = new Category(categoryName, categoryDescription);
                 if (!newCategory.addCategory(newCategory)) {
                     JOptionPane.showMessageDialog(
