@@ -197,7 +197,7 @@ public class SalesReport extends Report {
     }
 
     private boolean isSameDay(String orderTimestamp, String currentDate) {
-        return orderTimestamp.startsWith(currentDate);
+        return orderTimestamp.startsWith(currentDate.substring(0,7));
     }
 
     private boolean isSameMonth(String orderTimestamp, String currentDate) {

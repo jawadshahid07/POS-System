@@ -211,8 +211,7 @@ public class ProductDAO {
                 }
             }
         } catch (SQLException e) {
-            // Handle the exception (log, throw, or any custom handling)
-            e.printStackTrace(); // Print the stack trace for demonstration, replace with proper handling
+            e.printStackTrace();
         }
 
         return null;

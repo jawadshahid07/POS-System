@@ -98,15 +98,6 @@ public class Product {
         return productDAO.getProductById(code);
     }
 
-    public Product getProductByName(String productName) {
-        ProductDAO productDAO = new ProductDAO();
-        try {
-            return productDAO.getProductByName(productName);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void updateStock(int quantity) {
         this.stockQuantity += quantity;
     }
@@ -155,28 +146,31 @@ public class Product {
         for (Product p : products) {
             String expirationDateString = p.getExpirationDate();
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date expirationDate = sdf.parse(expirationDateString);
+            if (expirationDateString != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date expirationDate = sdf.parse(expirationDateString);
 
-                Calendar expirationCalendar = Calendar.getInstance();
-                expirationCalendar.setTime(expirationDate);
+                    Calendar expirationCalendar = Calendar.getInstance();
+                    expirationCalendar.setTime(expirationDate);
 
-                if (expirationCalendar.get(Calendar.YEAR) < currentDate.get(Calendar.YEAR) ||
-                        (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
-                                expirationCalendar.get(Calendar.MONTH) < currentDate.get(Calendar.MONTH)) ||
-                        (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
-                                expirationCalendar.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
-                                expirationCalendar.get(Calendar.DAY_OF_MONTH) < currentDate.get(Calendar.DAY_OF_MONTH))) {
-                    expiredProducts.add(p);
+                    if (expirationCalendar.get(Calendar.YEAR) < currentDate.get(Calendar.YEAR) ||
+                            (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
+                                    expirationCalendar.get(Calendar.MONTH) < currentDate.get(Calendar.MONTH)) ||
+                            (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
+                                    expirationCalendar.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
+                                    expirationCalendar.get(Calendar.DAY_OF_MONTH) < currentDate.get(Calendar.DAY_OF_MONTH))) {
+                        expiredProducts.add(p);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
         }
 
         return expiredProducts;
     }
+
 
     public void restockItems() {
         try {
