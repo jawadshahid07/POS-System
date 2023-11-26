@@ -6,6 +6,7 @@ import business.productCatalog.Category;
 import business.productCatalog.Product;
 import business.userAuth.SalesAssistant;
 import dao.CategoryDAO;
+import ui.LoginScreenUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +26,7 @@ public class AssistantUI extends JFrame {
     private JButton addToCartButton;
     private JButton processOrderButton;
     private JButton clearButton;
+    private JButton logoutButton;
     private Cart cart;
     private JComboBox categoryComboBox;
     private SalesAssistant salesAssistant;
@@ -41,7 +43,6 @@ public class AssistantUI extends JFrame {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Search Panel
         JPanel searchPanel = new JPanel(new GridLayout(1,3));
         JLabel searchLabel = new JLabel("Search Product:");
         searchField = new JTextField(20);
@@ -61,12 +62,9 @@ public class AssistantUI extends JFrame {
 
         bottomPanel.add(searchPanel);
 
-
-        // Total Cost Label
         totalCostLabel = new JLabel("Total Cost: $0.00", JLabel.CENTER);
         bottomPanel.add(totalCostLabel);
 
-        // Search Results Table
         String[] searchColumnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
         Object[][] searchData = new Object[0][4];
         DefaultTableModel searchModel = new DefaultTableModel(searchData, searchColumnNames);
@@ -74,13 +72,11 @@ public class AssistantUI extends JFrame {
         JScrollPane searchScrollPane = new JScrollPane(searchResultsTable);
         middlePanel.add(searchScrollPane);
 
-        // labels for tables
         JLabel searchTableLabel = new JLabel("Search Results:", JLabel.CENTER);
         topPanel.add(searchTableLabel);
         JLabel cartTableLabel = new JLabel("Cart:", JLabel.CENTER);
         topPanel.add(cartTableLabel);
 
-        // Quantity Panel
         JPanel quantityPanel = new JPanel(new FlowLayout());
         JLabel quantityLabel = new JLabel("Quantity:");
         JButton plusButton = new JButton("+");
@@ -112,8 +108,6 @@ public class AssistantUI extends JFrame {
                 quantityField.setText(Integer.toString(quantity));
             }
         });
-
-        // Add to Cart Button
         addToCartButton = new JButton("Add to Cart");
         addToCartButton.addActionListener(new ActionListener() {
             @Override
@@ -128,7 +122,6 @@ public class AssistantUI extends JFrame {
 
         bottomPanel.add(addToCartPanel);
 
-        // Cart Table
         String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price", "Total Price"};
         Object[][] cartData = new Object[0][4];
         DefaultTableModel cartModel = new DefaultTableModel(cartData, cartColumnNames);
@@ -137,7 +130,6 @@ public class AssistantUI extends JFrame {
         middlePanel.add(cartScrollPane);
         mainPanel.add(middlePanel, BorderLayout.CENTER);
 
-        //clear button
         clearButton = new JButton("Clear");
         clearButton.addActionListener(new ActionListener() {
             @Override
@@ -148,7 +140,6 @@ public class AssistantUI extends JFrame {
         JPanel processClearPanel = new JPanel();
         processClearPanel.add(clearButton);
 
-        // Process Order Button
         processOrderButton = new JButton("Process Order");
         processOrderButton.addActionListener(new ActionListener() {
             @Override
@@ -157,6 +148,16 @@ public class AssistantUI extends JFrame {
             }
         });
         processClearPanel.add(processOrderButton);
+
+        logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logout();
+            }
+        });
+        processClearPanel.add(logoutButton);
+
         bottomPanel.add(processClearPanel);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
@@ -164,6 +165,11 @@ public class AssistantUI extends JFrame {
         cart = new Cart();
         updateResults();
         setVisible(true);
+    }
+
+    private void logout() {
+        dispose();
+        new LoginScreenUI().setVisible(true);
     }
 
     public void clear() {
@@ -213,13 +219,11 @@ public class AssistantUI extends JFrame {
     }
 
     private void addToCart() {
-        // Get the selected product details
         int selectedRow = searchResultsTable.getSelectedRow();
         if (selectedRow != -1) {
             int productId = (int) searchResultsTable.getValueAt(selectedRow, 0);
             int quantity;
 
-            // Retrieve the quantity from the text field or use 1 as the default value
             try {
                 quantity = Integer.parseInt(quantityField.getText());
             } catch (NumberFormatException ex) {
@@ -231,8 +235,6 @@ public class AssistantUI extends JFrame {
             cart.add(item);
 
             displayCart();
-
-            // Update total cost
             updateTotalCost();
             JOptionPane.showMessageDialog(
                     this,
@@ -240,8 +242,6 @@ public class AssistantUI extends JFrame {
                     "Add to Cart",
                     JOptionPane.INFORMATION_MESSAGE
             );
-
-            // Reset the quantity field
             quantityField.setText("1");
         } else {
             JOptionPane.showMessageDialog(
@@ -253,7 +253,6 @@ public class AssistantUI extends JFrame {
         }
     }
     private void processOrder() {
-        // Display the order processing dialog
         OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, cart, salesAssistant);
     }
 
