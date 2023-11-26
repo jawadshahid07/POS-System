@@ -79,7 +79,4 @@ public class User {
         }
     }
 
-    public void save() {
-        // Save user information
-    }
 }

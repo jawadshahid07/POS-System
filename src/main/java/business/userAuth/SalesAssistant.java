@@ -3,6 +3,7 @@ package business.userAuth;
 import business.orderProcessing.Item;
 import business.orderProcessing.Order;
 import business.productCatalog.Product;
+import com.thoughtworks.qdox.model.expression.Or;
 import dao.OrderDAO;
 import dao.ProductDAO;
 
@@ -42,6 +43,7 @@ public class SalesAssistant extends Role {
     public void addOrder(Order order) {
         orders.add(order);
     }
+    public List<Order> getOrders() { return orders; }
 
     @Override
     public String permissions() {
