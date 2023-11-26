@@ -10,7 +10,7 @@ public class Item {
     public Item(Product product, int quantityOrdered) {
         this.product = product;
         this.quantityOrdered = quantityOrdered;
-        this.price = product.getCurrentPrice(); // Initialize price based on the current price of the product
+        this.price = product.getCurrentPrice();
     }
 
     public Product getProduct() {
