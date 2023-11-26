@@ -4,6 +4,7 @@ import business.productCatalog.Category;
 import business.productCatalog.Product;
 import dao.CategoryDAO;
 import dao.ProductDAO;
+import ui.manager.ManagerMainMenuUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +18,7 @@ public class ProductCatalogUI extends JFrame {
 
     private JComboBox<String> categoryComboBox;
     private JTable productTable;
-    private List<Category> categories; // Added to store all categories
+    private List<Category> categories;
 
     public ProductCatalogUI() {
         setTitle("Product Catalog");
@@ -25,14 +26,12 @@ public class ProductCatalogUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Create a panel for the main content
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Create a panel for the category selection
         JPanel categoryPanel = new JPanel();
         JLabel categoryLabel = new JLabel("Select Category:");
 
-        categories = getCategories(); // Store all categories for later use
+        categories = getCategories();
         categoryComboBox = new JComboBox<>(getCategoryNames());
         categoryComboBox.addActionListener(new ActionListener() {
             @Override
@@ -46,14 +45,12 @@ public class ProductCatalogUI extends JFrame {
 
         mainPanel.add(categoryPanel, BorderLayout.NORTH);
 
-        // Create a table to display the product catalog
         String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price"};
         DefaultTableModel model = new DefaultTableModel(null, columnNames);
         productTable = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(productTable);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Create a panel for buttons
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
         JButton addButton = new JButton("Add Product");
@@ -88,15 +85,25 @@ public class ProductCatalogUI extends JFrame {
             }
         });
 
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new ManagerMainMenuUI();
+            }
+        });
+
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(editButton);
         buttonPanel.add(manageCategoriesButton);
+        buttonPanel.add(backButton);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
-        updateTable(); // Initially update the table with all products
+        updateTable();
         setVisible(true);
     }
 
@@ -138,8 +145,7 @@ public class ProductCatalogUI extends JFrame {
     private void openAddDialog() {
         AddProductUI addDialog = new AddProductUI(this);
         addDialog.setVisible(true);
-        // Handle the result of the add operation here
-        updateTable(); // Update the table after adding a new product
+        updateTable();
     }
 
     private void openDeleteDialog() {
@@ -157,8 +163,6 @@ public class ProductCatalogUI extends JFrame {
                 int productId = (int) model.getValueAt(selectedRow, 0);
                 Category c = new Category();
                 c.removeProduct(productId);
-
-                // Update the table after deletion
                 updateTable();
             }
         } else {
@@ -178,7 +182,6 @@ public class ProductCatalogUI extends JFrame {
     }
 
     private Object[] getProductDetails() {
-        // Get the selected product details from the JTable
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
             return new Object[]{

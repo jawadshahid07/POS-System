@@ -3,6 +3,7 @@ package ui.manager.inventory;
 import business.productCatalog.Category;
 import business.productCatalog.Product;
 import dao.CategoryDAO;
+import ui.manager.ManagerMainMenuUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -28,10 +29,8 @@ public class InventoryManagementUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Create a panel for the main content
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Create a panel for the category selection
         JPanel categoryPanel = new JPanel();
         JLabel categoryLabel = new JLabel("Select Category:");
         categoryComboBox = new JComboBox<>(getCategoryNames());
@@ -46,8 +45,6 @@ public class InventoryManagementUI extends JFrame {
         categoryPanel.add(categoryComboBox);
 
         mainPanel.add(categoryPanel, BorderLayout.NORTH);
-
-        // Create a table to display the product catalog
         String[] columnNames = {"Product ID", "Name", "Description", "Quantity", "Price", "Expiration Date", "Alert Quantity"};
         Object[][] data = new Object[0][7];
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
@@ -55,7 +52,6 @@ public class InventoryManagementUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(productTable);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Create buttons for setting alerts, restocking, and handling expired items
         JPanel buttonPanel = new JPanel();
         JButton setAlertButton = new JButton("Set Alert");
         setAlertButton.addActionListener(new ActionListener() {
@@ -81,9 +77,19 @@ public class InventoryManagementUI extends JFrame {
             }
         });
 
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new ManagerMainMenuUI();
+            }
+        });
+
         buttonPanel.add(setAlertButton);
         buttonPanel.add(restockButton);
         buttonPanel.add(showExpiredButton);
+        buttonPanel.add(backButton);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 

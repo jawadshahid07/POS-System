@@ -2,6 +2,7 @@ package ui.manager.reports;
 
 import business.reporting.InventoryReport;
 import business.reporting.SalesReport;
+import ui.manager.ManagerMainMenuUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,9 +19,8 @@ public class GenerateReportsUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel mainPanel = new JPanel(new GridLayout(3, 1));
+        JPanel mainPanel = new JPanel(new GridLayout(4, 1));
 
-        // Sales Report Section
         JPanel salesReportPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel salesReportLabel = new JLabel("Generate Sales Report:");
         salesReportComboBox = new JComboBox<>(new String[]{"Daily", "Weekly", "Monthly"});
@@ -38,7 +38,6 @@ public class GenerateReportsUI extends JFrame {
 
         mainPanel.add(salesReportPanel);
 
-        // Inventory Report Section
         JPanel inventoryReportPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel inventoryReportLabel = new JLabel("Generate Inventory Report:");
         JButton generateInventoryReportButton = new JButton("Generate");
@@ -54,14 +53,25 @@ public class GenerateReportsUI extends JFrame {
 
         mainPanel.add(inventoryReportPanel);
 
-        // Add some space between sections
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new ManagerMainMenuUI();
+            }
+        });
+
+        backButtonPanel.add(backButton);
+        mainPanel.add(backButtonPanel);
 
         add(mainPanel);
     }
 
     private void generateSalesReport() {
-        // Implement logic to generate sales report based on the selected option
         String selectedOption = (String) salesReportComboBox.getSelectedItem();
         JOptionPane.showMessageDialog(
                 this,
