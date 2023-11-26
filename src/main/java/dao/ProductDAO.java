@@ -160,7 +160,7 @@ public class ProductDAO {
     }
 
     public Product getProductById(int code) {
-        Product product = new Product();
+        Product product = null;
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             String query = "SELECT * FROM products WHERE code = ?";
@@ -211,8 +211,7 @@ public class ProductDAO {
                 }
             }
         } catch (SQLException e) {
-            // Handle the exception (log, throw, or any custom handling)
-            e.printStackTrace(); // Print the stack trace for demonstration, replace with proper handling
+            e.printStackTrace();
         }
 
         return null;

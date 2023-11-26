@@ -85,12 +85,10 @@ public class CategoryDAO {
 
             preparedStatement.setInt(1, code);
 
-            // Execute the delete operation
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle exceptions appropriately (logging, throwing custom exceptions, etc.)
         }
     }
 }

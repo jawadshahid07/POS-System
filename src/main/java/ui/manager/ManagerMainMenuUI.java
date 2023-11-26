@@ -35,7 +35,7 @@ public class ManagerMainMenuUI extends JFrame {
             }
         });
 
-        JButton manageInventoryButton = new JButton("Manage Product Inventory");
+        JButton manageInventoryButton = new JButton("Manage Inventory");
         manageInventoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
