@@ -11,11 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ProductDAO {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pos_system";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "1234";
     public void addProduct(Product product) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "INSERT INTO products (name, description, stockQuantity, price, categoryCode, alertQuantity, dateTracked) VALUES (?, ?, ?, ?, ?, ? , ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, product.getName());
@@ -33,7 +30,7 @@ public class ProductDAO {
     }
 
     public void removeProduct(int code) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "DELETE FROM products WHERE code = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, code);
@@ -45,7 +42,7 @@ public class ProductDAO {
     }
 
     public void editProduct(Product product) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "UPDATE products SET name = ?, description = ?, stockQuantity = ?, price = ?, categoryCode = ?, alertQuantity = ? WHERE code = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, product.getName());
@@ -63,7 +60,7 @@ public class ProductDAO {
     }
     public List<Product> getProductsByCategoryCode(int categoryCode) {
         List<Product> products = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "SELECT * FROM products WHERE categoryCode = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, categoryCode);
@@ -95,7 +92,7 @@ public class ProductDAO {
     public List<Product> getProductsBySearchNameCategoryCode(String searchText, int categoryCode) {
         List<Product> products = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "SELECT * FROM products WHERE name LIKE ? AND categoryCode = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 // Use '%' as a wildcard to match any characters before and after the search text
@@ -130,7 +127,7 @@ public class ProductDAO {
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "SELECT * FROM products";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -162,7 +159,7 @@ public class ProductDAO {
     public Product getProductById(int code) {
         Product product = null;
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "SELECT * FROM products WHERE code = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, code);
@@ -191,7 +188,7 @@ public class ProductDAO {
     }
 
     public Product getProductByName(String productName) throws SQLException {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String productQuery = "SELECT * FROM products WHERE name = ?";
             try (PreparedStatement productStatement = connection.prepareStatement(productQuery)) {
                 productStatement.setString(1, productName);

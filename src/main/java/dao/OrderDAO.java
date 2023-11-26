@@ -12,12 +12,8 @@ import java.util.List;
 
 public class OrderDAO {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pos_system";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "1234";
-
     public void saveOrder(Order order) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String orderQuery = "INSERT INTO orders (totalAmount, orderDate) VALUES (?, ?)";
             try (PreparedStatement orderStatement = connection.prepareStatement(orderQuery, Statement.RETURN_GENERATED_KEYS)) {
                 orderStatement.setDouble(1, order.total());
@@ -58,7 +54,7 @@ public class OrderDAO {
     public List<Order> getOrders() {
         List<Order> orders = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String orderQuery = "SELECT * FROM orders";
             try (PreparedStatement orderStatement = connection.prepareStatement(orderQuery)) {
                 try (ResultSet orderResultSet = orderStatement.executeQuery()) {

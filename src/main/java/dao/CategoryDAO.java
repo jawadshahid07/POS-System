@@ -15,14 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pos_system";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "1234";
 
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "SELECT * FROM categories";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -46,7 +43,7 @@ public class CategoryDAO {
     }
 
     public void addCategory(Category category) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "INSERT INTO categories (name, description) VALUES (?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, category.getName());
@@ -61,7 +58,7 @@ public class CategoryDAO {
 
     public int getCategoryCodeByName(String categoryName) {
         int code = 0;
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "SELECT * FROM categories WHERE name = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, categoryName);
@@ -80,7 +77,7 @@ public class CategoryDAO {
     public void removeCategory(int code) {
         String sql = "DELETE FROM categories WHERE code = ?";
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, code);

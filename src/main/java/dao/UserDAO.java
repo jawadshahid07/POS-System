@@ -12,12 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
-    private static final String URL = "jdbc:mysql://localhost:3306/pos_system";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
 
     public UserDAO() {
-        // Initialize the database connection
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -28,7 +24,7 @@ public class UserDAO {
     public User getUser(String username) {
         User user = null;
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = DbConnection.getConnection()) {
             String query = "SELECT * FROM users WHERE username = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, username);
@@ -59,7 +55,6 @@ public class UserDAO {
                 return new SalesAssistant();
             case "Manager":
                 return new Manager();
-            // Add more roles as needed
             default:
                 throw new IllegalArgumentException("Invalid role: " + role);
         }
