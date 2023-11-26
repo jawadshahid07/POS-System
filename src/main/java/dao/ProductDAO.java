@@ -160,7 +160,7 @@ public class ProductDAO {
     }
 
     public Product getProductById(int code) {
-        Product product = new Product();
+        Product product = null;
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             String query = "SELECT * FROM products WHERE code = ?";
