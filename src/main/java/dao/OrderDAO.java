@@ -18,13 +18,40 @@ public class OrderDAO {
 
     public void saveOrder(Order order) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            String query = "INSERT INTO orders (totalAmount, orderDate) VALUES (?, ?)";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    preparedStatement.setDouble(1, order.total());
-                    preparedStatement.setString(2, order.getTimestamp());
+            // Insert order and get the generated orderID
+            String orderQuery = "INSERT INTO orders (totalAmount, orderDate) VALUES (?, ?)";
+            try (PreparedStatement orderStatement = connection.prepareStatement(orderQuery, Statement.RETURN_GENERATED_KEYS)) {
+                orderStatement.setDouble(1, order.total());
+                orderStatement.setString(2, order.getTimestamp());
+                orderStatement.executeUpdate();
+
+                // Retrieve the generated orderID
+                try (ResultSet generatedKeys = orderStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int orderID = generatedKeys.getInt(1);
+
+                        // Save the ordered items associated with the orderID
+                        for (Item item : order.getItemsList()) {
+                            saveOrderedItem(connection, orderID, item);
+                        }
+                    } else {
+                        throw new SQLException("Failed to get the generated orderID.");
+                    }
                 }
-                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveOrderedItem(Connection connection, int orderID, Item item) {
+        try {
+            String orderedItemQuery = "INSERT INTO orderedItems (orderID, productName, quantityOrdered) VALUES (?, ?, ?)";
+            try (PreparedStatement orderedItemStatement = connection.prepareStatement(orderedItemQuery)) {
+                orderedItemStatement.setInt(1, orderID);
+                orderedItemStatement.setString(2, item.getProduct().getName());
+                orderedItemStatement.setInt(3, item.getQuantityOrdered());
+                orderedItemStatement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -3,6 +3,7 @@ package business.userAuth;
 import business.orderProcessing.Item;
 import business.orderProcessing.Order;
 import business.productCatalog.Product;
+import dao.OrderDAO;
 import dao.ProductDAO;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class SalesAssistant extends Role {
                     productDAO.editProduct(product);
                 }
                 order.generateInvoice();
+                OrderDAO orderDAO = new OrderDAO();
+                orderDAO.saveOrder(order);
                 order.setStatus(false);
             }
         }
