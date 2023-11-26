@@ -176,6 +176,16 @@ public class ProductCatalogUI extends JFrame {
     }
 
     private void openEditDialog() {
+        int selectedRow = productTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a product to edit.",
+                    "Edit Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         EditProductUI editDialog = new EditProductUI(this, Objects.requireNonNull(getProductDetails()));
         editDialog.setVisible(true);
         updateTable();

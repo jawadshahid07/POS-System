@@ -31,8 +31,6 @@ public class OrderProcessingDialog extends JDialog {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-
-        // Display cart
         String[] cartColumnNames = {"Product ID", "Name", "Quantity", "Price", "Total Price"};
         Object[][] cartData = new Object[0][4];
         DefaultTableModel cartModel = new DefaultTableModel(cartData, cartColumnNames);
@@ -46,14 +44,13 @@ public class OrderProcessingDialog extends JDialog {
             cartModel.addRow(itemDetails);
         }
 
-        // Buttons panel
         JPanel buttonsPanel = new JPanel(new GridLayout(4,2));
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose(); // Close the dialog
+                dispose();
             }
         });
 
@@ -65,15 +62,12 @@ public class OrderProcessingDialog extends JDialog {
             }
         });
 
-        // Display total cost
         JLabel totalCostLabel = new JLabel("Total Cost: $" + String.format("%.2f", cart.total()), JLabel.CENTER);
         JLabel empty = new JLabel();
 
-        //entered amount
         JLabel enteredLabel = new JLabel("Enter Amount:");
         enteredField = new JTextField(20);
 
-        //customer section
         JLabel customerLabel = new JLabel("Customer Name:");
         customerField = new JTextField(20);
 
@@ -113,8 +107,6 @@ public class OrderProcessingDialog extends JDialog {
             return;
         }
         Order order = cart.generateOrder();
-        order.setCustomer(customerField.getText());
-        order.setEnteredAmount(Double.parseDouble(enteredField.getText()));
         if (order == null) {
             JOptionPane.showMessageDialog(
                     this,
@@ -124,6 +116,8 @@ public class OrderProcessingDialog extends JDialog {
             );
             return;
         }
+        order.setCustomer(customerField.getText());
+        order.setEnteredAmount(Double.parseDouble(enteredField.getText()));
         salesAssistant.addOrder(order);
         List<String> restockNames = salesAssistant.processOrder();
         JOptionPane.showMessageDialog(
