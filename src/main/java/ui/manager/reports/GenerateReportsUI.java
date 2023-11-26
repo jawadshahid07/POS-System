@@ -84,15 +84,5 @@ public class GenerateReportsUI extends JFrame {
         InventoryReport inventoryReport = new InventoryReport();
         inventoryReport.display();
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                GenerateReportsUI reportsScreen = new GenerateReportsUI();
-                reportsScreen.setVisible(true);
-            }
-        });
-    }
 }
 

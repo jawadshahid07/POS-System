@@ -2,6 +2,7 @@ package ui.manager;
 
 import ui.manager.catalog.ProductCatalogUI;
 import ui.manager.inventory.InventoryManagementUI;
+import ui.manager.reports.GenerateReportsUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +49,8 @@ public class ManagerMainMenuUI extends JFrame {
         generateReportsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Open the dialog for generating reports
+                GenerateReportsUI reportsScreen = new GenerateReportsUI();
+                reportsScreen.setVisible(true);
             }
         });
 
