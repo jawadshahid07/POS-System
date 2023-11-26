@@ -22,7 +22,7 @@ public class OrderDAO {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     preparedStatement.setDouble(1, order.total());
-                    preparedStatement.setString(2, LocalDate.now().toString());
+                    preparedStatement.setString(2, order.getTimestamp());
                 }
                 preparedStatement.executeUpdate();
             }

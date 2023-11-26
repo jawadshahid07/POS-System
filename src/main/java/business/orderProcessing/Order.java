@@ -30,6 +30,10 @@ public class Order extends ItemContainer {
         this.timestamp = timestamp;
     }
 
+    public String getTimestamp() {
+        return this.timestamp;
+    }
+
     public void setCustomer(String customer) {
         this.customer = customer;
     }
