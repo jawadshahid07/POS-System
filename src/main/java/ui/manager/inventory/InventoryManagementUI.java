@@ -65,7 +65,7 @@ public class InventoryManagementUI extends JFrame {
         restockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                restockItem();
+                restockItems();
             }
         });
 
@@ -94,6 +94,18 @@ public class InventoryManagementUI extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+        updateTable();
+    }
+
+    private void restockItems() {
+        Product product = new Product();
+        product.restockItems();
+        JOptionPane.showMessageDialog(
+                this,
+                "Items have been restocked from file",
+                "Items Restocked",
+                JOptionPane.INFORMATION_MESSAGE
+        );
         updateTable();
     }
 
@@ -141,22 +153,6 @@ public class InventoryManagementUI extends JFrame {
                     this,
                     "Please select a product to set an alert.",
                     "Alert Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-        }
-    }
-
-    private void restockItem() {
-        int selectedRow = productTable.getSelectedRow();
-        if (selectedRow != -1) {
-            Object[] productDetails = getProductDetails(selectedRow);
-            RestockItemsUI restockDialog = new RestockItemsUI(this, productDetails);
-            restockDialog.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Please select a product to restock.",
-                    "Restock Error",
                     JOptionPane.ERROR_MESSAGE
             );
         }

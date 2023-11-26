@@ -3,6 +3,8 @@ package business.productCatalog;
 import dao.CategoryDAO;
 import dao.ProductDAO;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -147,40 +149,69 @@ public class Product {
         ArrayList<Product> expiredProducts = new ArrayList<>();
         List<Product> products = getProductsByCategory("All Categories");
 
-        // Get the current date
         Calendar currentDate = Calendar.getInstance();
         currentDate.setTime(new Date());
 
-        // Iterate through products and filter expired ones
         for (Product p : products) {
             String expirationDateString = p.getExpirationDate();
 
-            // Parse the expiration date string
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Date expirationDate = sdf.parse(expirationDateString);
 
-                // Compare the expiration date with the current date
                 Calendar expirationCalendar = Calendar.getInstance();
                 expirationCalendar.setTime(expirationDate);
 
-                // Compare year, month, and day
                 if (expirationCalendar.get(Calendar.YEAR) < currentDate.get(Calendar.YEAR) ||
                         (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
                                 expirationCalendar.get(Calendar.MONTH) < currentDate.get(Calendar.MONTH)) ||
                         (expirationCalendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
                                 expirationCalendar.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
                                 expirationCalendar.get(Calendar.DAY_OF_MONTH) < currentDate.get(Calendar.DAY_OF_MONTH))) {
-                    // Product is expired
                     expiredProducts.add(p);
                 }
             } catch (ParseException e) {
-                // Handle parsing exception if needed
                 e.printStackTrace();
             }
         }
 
         return expiredProducts;
+    }
+
+    public void restockItems() {
+        try {
+            Scanner scanner = new Scanner(new File("restock.txt"));
+            if (scanner.hasNextLine()) {
+                scanner.nextLine();
+            }
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] values = line.split(",");
+
+                if (values.length == 2) {
+                    int code = Integer.parseInt(values[0].trim());
+                    int quantity = Integer.parseInt(values[1].trim());
+                    if (quantity > 0) {
+                        Product product = getProductById(code);
+                        product.updateStock(quantity);
+                        product.updateProductInDB(product);
+                    }
+
+                } else {
+                    System.err.println("Invalid line: " + line);
+                }
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void updateProductInDB(Product product) {
+        ProductDAO productDAO = new ProductDAO();
+        productDAO.editProduct(product);
     }
 }
 
