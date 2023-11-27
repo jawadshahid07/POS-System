@@ -187,8 +187,10 @@ public class Product {
                     int quantity = Integer.parseInt(values[1].trim());
                     if (quantity > 0) {
                         Product product = getProductById(code);
-                        product.updateStock(quantity);
-                        product.updateProductInDB(product);
+                        if (product != null) {
+                            product.updateStock(quantity);
+                            product.updateProductInDB(product);
+                        }
                     }
 
                 } else {

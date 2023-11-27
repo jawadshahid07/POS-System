@@ -109,7 +109,7 @@ public class ProductCatalogUI extends JFrame {
 
     private List<Category> getCategories() {
         CategoryDAO categoryDAO = new CategoryDAO();
-        return categoryDAO.getAllCategories();
+        return categoryDAO.getAllCategories(); 
     }
 
     private String[] getCategoryNames() {

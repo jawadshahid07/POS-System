@@ -88,7 +88,16 @@ public class OrderProcessingDialog extends JDialog {
     }
 
     private void generateInvoice() {
-        if (Integer.parseInt(enteredField.getText()) < cart.total() || enteredField.getText().isEmpty()) {
+        if (!isNumeric(enteredField.getText())  || enteredField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter valid numeric amount",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        if (Integer.parseInt(enteredField.getText()) < cart.total()) {
             JOptionPane.showMessageDialog(
                     this,
                     "Entered amount must not be less than total amount!",
@@ -142,6 +151,15 @@ public class OrderProcessingDialog extends JDialog {
         parent.clear();
         parent.updateResults();
         dispose();
+    }
+
+    private boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }
 

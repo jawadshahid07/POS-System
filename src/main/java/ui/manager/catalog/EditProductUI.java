@@ -23,6 +23,7 @@ public class EditProductUI extends JDialog {
     public EditProductUI(ProductCatalogUI parent, Object[] productDetails) {
         super(parent, "Edit Product", true);
         this.productDetails = productDetails;
+        this.parent = parent;
         setSize(300, 200);
         setLocationRelativeTo(parent);
 
@@ -82,21 +83,21 @@ public class EditProductUI extends JDialog {
 
     private void editProduct() {
         String name = nameField.getText();
-        if (priceField.getText().isEmpty()) {
+        if (priceField.getText().isEmpty() || !isNumeric(priceField.getText())) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Please enter a price",
-                    "Price Field Blank",
+                    "Please enter a valid numeric price",
+                    "Invalid Price",
                     JOptionPane.ERROR_MESSAGE
             );
             return;
         }
         double price = Double.parseDouble(priceField.getText());
-        if (quantityField.getText().isEmpty()) {
+        if (quantityField.getText().isEmpty() || !isNumeric(quantityField.getText())) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Please enter quantity",
-                    "Quantity Field Blank",
+                    "Please enter a valid numeric quantity",
+                    "Invalid Quantity",
                     JOptionPane.ERROR_MESSAGE
             );
             return;
@@ -145,6 +146,15 @@ public class EditProductUI extends JDialog {
         c.editProduct(product);
         parent.updateTable();
         dispose();
+    }
+
+    private boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }
 

@@ -131,29 +131,6 @@ public class AddProductUI extends JDialog {
 
     private void addProduct() {
         String name = nameField.getText();
-        if (priceField.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Please enter a price",
-                    "Price Field Blank",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            return;
-        }
-        double price = Double.parseDouble(priceField.getText());
-        if (quantityField.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Please enter quantity",
-                    "Quantity Field Blank",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            return;
-        }
-        int quantity = Integer.parseInt(quantityField.getText());
-        String description = descriptionField.getText();
-        String selectedCategory = categoryComboBox.getSelectedItem().toString();
-
         if (name.isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
@@ -163,6 +140,29 @@ public class AddProductUI extends JDialog {
             );
             return;
         }
+        if (priceField.getText().isEmpty() || !isNumeric(priceField.getText())) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter a valid numeric price",
+                    "Invalid Price",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        double price = Double.parseDouble(priceField.getText());
+        if (quantityField.getText().isEmpty() || !isNumeric(quantityField.getText())) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter a valid numeric quantity",
+                    "Invalid Quantity",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        int quantity = Integer.parseInt(quantityField.getText());
+        String description = descriptionField.getText();
+        String selectedCategory = categoryComboBox.getSelectedItem().toString();
+
         if (price < 1) {
             JOptionPane.showMessageDialog(
                     this,
@@ -216,15 +216,23 @@ public class AddProductUI extends JDialog {
     }
 
     private int getMonthNumber(String monthName) {
-        // Converts the month name to its corresponding number
         SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
         Calendar calendar = Calendar.getInstance();
         try {
             calendar.setTime(monthFormat.parse(monthName));
-            return calendar.get(Calendar.MONTH) + 1; // Adding 1 because Calendar.MONTH is zero-based
+            return calendar.get(Calendar.MONTH) + 1;
         } catch (ParseException e) {
             e.printStackTrace();
-            return 1; // Default to January if parsing fails
+            return 1;
+        }
+    }
+
+    private boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 

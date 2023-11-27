@@ -52,11 +52,11 @@ public class SetAlertUI extends JDialog {
     }
 
     private void setAlert() {
-        if (quantityField.getText().isEmpty()) {
+        if (quantityField.getText().isEmpty() || !isNumeric(quantityField.getText())) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Please enter quantity.",
-                    "Alert Error",
+                    "Please enter a valid numeric price",
+                    "Invalid Price",
                     JOptionPane.ERROR_MESSAGE
             );
             return;
@@ -80,6 +80,15 @@ public class SetAlertUI extends JDialog {
         c.editProduct(product);
         parent.updateTable();
         dispose();
+    }
+
+    private boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }
 

@@ -253,6 +253,16 @@ public class AssistantUI extends JFrame {
         }
     }
     private void processOrder() {
+        DefaultTableModel cartModel = (DefaultTableModel) cartTable.getModel();
+        if (cartModel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please add products to cart",
+                    "Empty cart",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(this, cart, salesAssistant);
     }
 
