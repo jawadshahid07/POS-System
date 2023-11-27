@@ -76,6 +76,14 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
 5. Run the application.
 6. Log in using the provided sample users' credentials.
 
+- **Manager**
+  - **Username:** admin
+  - **Password:** admin
+
+- **Sales Assistant**
+  - **Username:** staff
+  - **Password:** staff
+
 ## Tech Stack
 
 - **Java:** Core language for application development.
