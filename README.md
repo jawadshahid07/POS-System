@@ -91,7 +91,3 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
 - **JDBC:** For database connectivity using MySQL
 - **MySQL:** Database access
 
-## Contributing
-
-Contributions are welcome! Please follow the [contribution guidelines](CONTRIBUTING.md).
-
