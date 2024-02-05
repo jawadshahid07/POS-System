@@ -95,8 +95,3 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
 
 Contributions are welcome! Please follow the [contribution guidelines](CONTRIBUTING.md).
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
-Feel free to reach out for any questions or support. Happy coding!
