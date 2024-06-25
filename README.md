@@ -13,8 +13,6 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
 7. [Manager Interface](#manager-interface)
 8. [Getting Started](#getting-started)
 9. [Tech Stack](#tech-stack)
-10. [Contributing](#contributing)
-11. [License](#license)
 
 ## Features
 
@@ -23,6 +21,8 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
 - **Login Screen:** A login screen prompts users to enter their username and password.
 - **Role-Based UI:** Based on credentials, the system displays either the Sales Assistant or Manager UI.
 
+![Login Screen](screenshots/login.png)
+
 ### 2. Product Catalog
 
 - **Category Management:**
@@ -30,6 +30,9 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
 - **Product Management:**
   - List all products sorted by category.
   - Add, edit, or delete product details (code, name, description, price, stock quantity).
+
+![Add Product](screenshots/addproduct.png)  
+![Add Category](screenshots/addcategory.png)
 
 ### 3. Inventory Management
 
@@ -42,6 +45,8 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
 - **Restock Products:**
   - Read and update product quantities from an external CSV file.
 
+![Inventory Management](screenshots/inventorymanagement.png)
+
 ### 4. Generate Reports
 
 - **Sales Reports:**
@@ -49,6 +54,9 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
   - Tables include items for each order.
 - **Inventory Reports:**
   - Generate PDF reports with a table of product details (code, name, description, price, quantity, expiration date).
+
+![Generate Reports](screenshots/reportgeneration.png)  
+![Generated Report](screenshots/genreport.png)
 
 ### 5. Sales Assistant Interface
 
@@ -61,19 +69,23 @@ Welcome to the Pharmacy Point of Sale (POS) System! This application is designed
   - Enter customer name and confirm order.
   - Generate a PDF receipt with order details.
 
+![Sales Assistant Interface](screenshots/assistantcheckout.png)
+
 ### 6. Manager Interface
 
 - **Main Menu:**
   - Buttons to navigate to Product Catalog, Inventory Management, or Generate Reports.
   - Role-specific access control.
 
+![Manager Interface](screenshots/managerpanel.png)
+
 ## Getting Started
 
 1. Clone the repository.
 2. Open the project in your preferred Java IDE.
-3. Run the MySQL query using a suitable database tool such as MySQL workbench.
+3. Run the MySQL query using a suitable database tool such as MySQL workbench. (The query is found in root folder as pos_system.sql)
 4. Edit the JDBC credentials (server url, username, password) in the DbConnection class to your credentials for the MySQL server url, username, password.
-5. Run the application.
+5. Run the application. (under src->main->java->org.example->Main.java)
 6. Log in using the provided sample users' credentials.
 
 - **Manager**
